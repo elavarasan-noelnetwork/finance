@@ -1,0 +1,13 @@
+{
+  "name": "noel/finance",
+  "type": "project",
+  "require": {
+    "vlucas/phpdotenv": "^3.6",
+    "tecnickcom/tcpdf": "^6.10"
+  },
+  "autoload": {
+    "psr-4": {
+      "Noel\\finance\\": "lib/"
+    }
+  }
+}

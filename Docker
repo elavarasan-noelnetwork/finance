@@ -1,0 +1,11 @@
+FROM php:7.1-apache
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php && \
+    mv composer.phar /usr/local/bin/composer
+
+# Set the working directory
+WORKDIR /var/www/html
+
+# Optional: Enable Apache mod_rewrite
+RUN a2enmod rewrite
