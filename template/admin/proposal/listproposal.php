@@ -135,6 +135,11 @@ use core\View as View;
   75%  { content: "..."; }
   100% { content: ""; }
 }
+
+.label {
+  color: #6c757d; /* muted grey */
+  display: inline-block;
+}
 </style>
 
 <body>
@@ -164,10 +169,7 @@ use core\View as View;
           <div class="card">
 
             <div class="breadcrumb-floating ms-3 mt-2 pb-1">
-              <a href="<?php echo BASE_URL; ?>">Dashboard</a>
-              <span>››</span>
-
-              <span class="current">Proposals</span>
+              <span class="current">Applications</span>
             </div>
 
             <div class="card-body">
@@ -176,8 +178,8 @@ use core\View as View;
               <div class="d-flex justify-content-between align-items-center mb-2 p-2 rounded bg-primary border shadow-sm">
 
                 <div class="d-flex align-items-center gap-2">
-                  <i class="bi bi-file-earmark-pdf-fill fs-3 text-white"></i>
-                  <h3 class="mb-0 text-white">Proposals</h3>
+                  <i class="bi bi-house-heart fs-3 text-white"></i>
+                  <h3 class="mb-0 text-white">Applications</h3>
                   <?php if (isset($_SESSION['proposal']['flash'])) {
                     echo '<div class="alert alert-' . ($_SESSION['proposal']['flash']['type'] ?? 'info') . ' alert-dismissible fade show d-flex align-items-center gap-2 align-self-center mb-0 py-1 px-2" role="alert"> <div class="flex-grow-1">';
                     echo htmlspecialchars($_SESSION['proposal']['flash']['message']);
@@ -187,8 +189,8 @@ use core\View as View;
                   } ?>
                 </div>
 
-                <a href="<?php echo BASE_URL; ?>addproposal"><button class="btn btn-primary add-user-btn">
-                    <i class="fas fa-user-plus mr-2"></i> Create Proposal
+                <a href="<?php echo BASE_URL; ?>optin"><button class="btn btn-primary add-user-btn">
+                    <i class="fas fa-user-plus mr-2"></i> New Application
                   </button>
                 </a>
 
@@ -210,42 +212,74 @@ use core\View as View;
                 ?>
                 <div class="form-row">
 
-                  <select class="form-select form-select" id="company" name="company">
-                    <option value="">Select Company</option>
+                  <input type="text" id="application" name="application" placeholder="Code / Applicant / Trust / SMSF" maxlength="200" value="<?php echo htmlspecialchars(trim($_SESSION['proposal']['filters']['application']) ?? ''); ?>">
 
+                  <select class="form-select form-select" id="property" name="property">
+                    <option value="">Select Property</option>
                     <?php
-                    if ($companyDetails && is_array($companyDetails) && count($companyDetails) > 0) {
-                      foreach ($companyDetails as $key => $company) { ?>
-                        <option value="<?php echo $company['com_id']; ?>"
-                          <?php if ($_SESSION['proposal']['filters']['company'] == $company['com_id']) {
+                    if ($property_array && is_array($property_array) && count($property_array) > 0) {
+                      foreach ($property_array as $key => $propertyName) { ?>
+                        <option value="<?php echo $key; ?>"
+                          <?php if ($_SESSION['proposal']['filters']['property'] == $key) {
                             echo "selected ";
                             echo "class='active'";
                           } ?>>
-                          <?php echo $company['com_name']; ?>
+                          <?php echo $propertyName; ?>
                         </option>
                     <?php }
                     } ?>
                   </select>
 
-                  <input type="text" id="project" name="project" placeholder="Project Code / Title / Location" maxlength="100" value="<?php echo htmlspecialchars(trim($_SESSION['proposal']['filters']['project']) ?? ''); ?>">
-                  <input type="text" id="customer" name="customer" placeholder="Customer Name / Address" maxlength="100" value="<?php echo htmlspecialchars(trim($_SESSION['proposal']['filters']['customer']) ?? ''); ?>">
-
-
-                  <?php $_AstatusArr[1] = 'Active';
-                  $_AstatusArr[2] = 'Inactive'; ?>
+                  <select class="form-select form-select" id="type" name="type">
+                    <option value="">Select Buying Type</option>
+                    <?php
+                    if ($buying_type_array && is_array($buying_type_array) && count($buying_type_array) > 0) {
+                      foreach ($buying_type_array as $key => $buyingTypeName) { ?>
+                        <option value="<?php echo $key; ?>"
+                          <?php if ($_SESSION['proposal']['filters']['type'] == $key) {
+                            echo "selected ";
+                            echo "class='active'";
+                          } ?>>
+                          <?php echo $buyingTypeName; ?>
+                        </option>
+                    <?php }
+                    } ?>
+                  </select>
+                  
+                  <select class="form-select form-select" id="source" name="source">
+                    <option value="">Select Source</option>
+                    <?php
+                    if ($source_array && is_array($source_array) && count($source_array) > 0) {
+                      foreach ($source_array as $key => $sorceName) { ?>
+                        <option value="<?php echo $key; ?>"
+                          <?php if ($_SESSION['proposal']['filters']['source'] == $key) {
+                            echo "selected ";
+                            echo "class='active'";
+                          } ?>>
+                          <?php echo $sorceName; ?>
+                        </option>
+                    <?php }
+                    } ?>
+                  </select>   
+                  
+                  <!--
                   <select class="form-select form-select" id="status" name="status">
                     <option value="">Select Status</option>
                     <?php
-                    if (!empty($_AstatusArr)) {
-                      foreach ($_AstatusArr as $key => $value) {  ?>
-                        <option value="<?php echo $key; ?>" <?php if ($_SESSION['proposal']['filters']['status'] == $key) {
-                                                              echo "selected";
-                                                            } ?>><?php echo $value; ?></option>
-                    <?php
-                      }
-                    }
-                    ?>
-                  </select>
+                    if ($status_array && is_array($status_array) && count($status_array) > 0) {
+                      foreach ($status_array as $key => $statusName) { ?>
+                        <option value="<?php echo $key; ?>"
+                          <?php if ($_SESSION['proposal']['filters']['status'] == $key) {
+                            echo "selected ";
+                            echo "class='active'";
+                          } ?>>
+                          <?php echo $statusName; ?>
+                        </option>
+                    <?php }
+                    } ?>
+                  </select>   
+                  -->                  
+                            
                   <div class="filter-buttons">
                     <button type="submit" name="submit" class="btn-submit">Apply Filter</button>
                     <button type="submit" name="reset" class="btn-reset" value="1">Reset</button>
@@ -261,13 +295,12 @@ use core\View as View;
                         <tr>
                           <th>Code</th>
                           <th>Created On</th>
-                          <th>Company</th>
-                          <th>Title</th>
-                          <th>Location</th>
-                          <th>Agreement</th>
-                          <th>Customer</th>
-                          <th>Address</th>
+                          <th>Property</th>
+                          <th>Type</th>
+                          <th>Details</th>
+                          <th>Source</th>
                           <th>Status</th>
+                          <th>Progress</th>
                           <th>Actions</th>
                         </tr>
                       </thead>
@@ -312,17 +345,18 @@ use core\View as View;
             ], //Set default sort: column 0 (usr_id), descending
             columnDefs: [{
                 orderable: false,
-                targets: [2,9]
+                targets: [2,3,4,5,6,7]
               } // Disables sorting (0-based index)
             ],
             ajax: {
               url: '/ajaxproposals', // change to your route
               type: 'POST',
               data: function(d) { //usr_name  usr_department usr_role
-                d.company = $('#company').val();
-                d.project = $('#project').val();
-                d.customer = $('#customer').val();
-                d.status = $('#status').val();
+                d.application = $('#application').val();
+                d.property = $('#property').val();
+                d.type = $('#type').val();
+                d.source = $('#source').val();
+                //d.status = $('#status').val();
               }
             },
             columns: [{
@@ -332,26 +366,23 @@ use core\View as View;
                 data: 'created_on'
               },
               {
-                data: 'title'
+                data: 'property'
               },
               {
-                data: 'logo'
+                data: 'Type'
               },              
               {
-                data: 'location'
+                data: 'Details'
               },
               {
-                data: 'agreement'
+                data: 'Source'
               },
               {
-                data: 'customer'
+                data: 'Status'
               },
               {
-                data: 'address'
-              },
-              {
-                data: 'status'
-              },
+                data: 'Progress'
+              },              
               {
                 data: 'actions'
               }
@@ -381,27 +412,46 @@ use core\View as View;
 
       <script>
         /* ===== start Selected department highlight ============*/
-        const selectcompany = document.getElementById('company');
-        const selectstatus = document.getElementById('status');
+        const selectProperty = document.getElementById('property');
+        const selectType = document.getElementById('type');
+        const selectSource = document.getElementById('source');
+        //const selectstatus = document.getElementById('status');
 
         function updateSelectStyle() {
-          if (selectcompany.value !== '') {
-            selectcompany.classList.add('highlighted');
+          if (selectProperty.value !== '') {
+            selectProperty.classList.add('highlighted');
           } else {
-            selectcompany.classList.remove('highlighted');
+            selectProperty.classList.remove('highlighted');
           }
 
+          if (selectType.value !== '') {
+            selectType.classList.add('highlighted');
+          } else {
+            selectType.classList.remove('highlighted');
+          }
+
+          if (selectSource.value !== '') {
+            selectSource.classList.add('highlighted');
+          } else {
+            selectSource.classList.remove('highlighted');
+          }
+
+          /*
           if (selectstatus.value !== '') {
             selectstatus.classList.add('highlighted');
           } else {
             selectstatus.classList.remove('highlighted');
           }
+          */
+
         }
         // Apply on page load (if pre-selected)
         updateSelectStyle();
         // Apply on change
-        selectcompany.addEventListener('change', updateSelectStyle);
-        selectstatus.addEventListener('change', updateSelectStyle);
+        selectProperty.addEventListener('change', updateSelectStyle);
+        selectType.addEventListener('change', updateSelectStyle);
+        selectSource.addEventListener('change', updateSelectStyle);
+        //selectstatus.addEventListener('change', updateSelectStyle);
         /* ===== start Selected department highlight ============*/
       </script>
 

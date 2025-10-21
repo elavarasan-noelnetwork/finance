@@ -6,8 +6,10 @@ use app\controllers\AdminController;
 use app\controllers\admin\UserController;
 use app\controllers\CommonController;
 use app\controllers\LoanApplicationController;
-use app\controllers\LoanprogressController;
 use app\controllers\admin\ProposalController;
+use app\controllers\LoanProgressController;
+use app\controllers\TrustController;
+use app\controllers\SmsfController;
 
 //print_r(UserController::class);die;
 
@@ -21,14 +23,19 @@ Route::get("/pagenotfound", [AdminController::class, "pageNotFounderror"]);
 
 // Protected admin home
 //CommonController::authRoute("get", "/application", [LoanApplicationController::class, "home"]);
-CommonController::authRoute("get", "/application", [LoanprogressController::class, "home"]);
-
+CommonController::authRoute("get", "/application", [LoanProgressController::class, "home"]);
 CommonController::authRoute("get", "/optin", [LoanApplicationController::class, "optin"]);
 CommonController::authRoute("post", "/storeoptin", [LoanApplicationController::class, "storeoptin"]);
 
-CommonController::authRoute("post", "/ajaxaddfinancedetails", [LoanprogressController::class, "ajaxaddfinancedetails"]);
+//trust
+CommonController::authRoute("get", "/trust/{*}", [TrustController::class, "home"]);
+CommonController::authRoute("post", "/storetrust", [TrustController::class, "storetrust"]);
 
+//smsf
+CommonController::authRoute("get", "/smsf/{*}", [SmsfController::class, "home"]);
+CommonController::authRoute("post", "/storesmsf", [SmsfController::class, "storesmsf"]);
 
+CommonController::authRoute("post", "/ajaxaddfinancedetails", [LoanProgressController::class, "ajaxaddfinancedetails"]);
 
 CommonController::authRoute("get", "/logout", [AdminController::class, "logout"]);
 
@@ -38,8 +45,6 @@ CommonController::authRoute("post", "/updatepassword", [UserController::class, "
 
 CommonController::authRoute("get", "/proposals", [ProposalController::class, "home"]);
 CommonController::authRoute("post", "/ajaxproposals", [ProposalController::class, "ajaxproposals"]);
-
-
 
 
 /* 404 Page - Not found route */

@@ -51,7 +51,7 @@ class AdminController extends Controller
       header("Location: /login");
       exit;
     } else {
-      header("Location: /optin");
+      header("Location: /".$_SESSION['auth']['user_redirect']);
       exit;
     }
     exit;
@@ -121,12 +121,13 @@ class AdminController extends Controller
           $_SESSION['auth']['usr_phone_code'] = $_Auser['zlu_phone_code'];
           $_SESSION['auth']['usr_phone'] = $_Auser['zlu_phone'];
           $_SESSION['auth']['usr_address'] = $_Auser['zlu_address'];
-          $_SESSION['auth']['user_type '] = $_Auser['zlu_user_type'];
+          $_SESSION['auth']['user_type'] = $_Auser['zlu_user_type'];
           $_SESSION['auth']['user_email_verified'] = $_Auser['zlu_email_verified'];
-          $_SESSION['auth']['user_application '] = $_Auser['zlu_application_completed'];
+          $_SESSION['auth']['user_application'] = $_Auser['zlu_application_completed'];
           $_SESSION['auth']['user_created_on'] = $_Auser['zlu_created_on'];
-          $_SESSION['show_profile_dropdown'] = true;
-
+          $_SESSION['auth']['user_department'] = DEPARTMENT_ARRAY[$_Auser['zlu_user_type']];
+          $_SESSION['auth']['user_redirect']=CommonController::getRedirectPageName();
+          $_SESSION['show_profile_dropdown'] = true;      
         } else {
           $invalid = true;
         }
@@ -151,7 +152,7 @@ class AdminController extends Controller
       exit;
     }
 
-    header("Location: /optin");
+    header("Location: /".$_SESSION['auth']['user_redirect']);
   }
 
   public function login()

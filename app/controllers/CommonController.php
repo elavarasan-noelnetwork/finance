@@ -469,21 +469,7 @@ class CommonController extends Controller
     return $parenMenuArray;
   }
 
-  //get menu name by id
-  public static function getMenuNameById($menuId = '')
-  {
-    $menuName = '';
-    if (!empty($menuId)) {
-      $menuModelObj = new MenuModel();
-      $where['men_id'] = $menuId;
-      $menuDetails = $menuModelObj->getOne($where, 'men_name');
 
-      if ($menuDetails && is_array($menuDetails) && count($menuDetails) > 0) {
-        $menuName = trim($menuDetails['men_name']);
-      }
-    }
-    return $menuName;
-  }
 
   //get current page name
   public static function getCurrentPageName($getId = '')
@@ -570,9 +556,20 @@ class CommonController extends Controller
     return $formattedDate;
   }
 
-  public function getRedirectPageNameAfterLogin(){
-
+  public static function getRedirectPageName(){
+    $redirectPage = 'proposals';
+    if(isset($_SESSION['auth']['user_department']) && $_SESSION['auth']['user_department']=='Client'){
+      if($_SESSION['auth']['user_application']==1){
+        $redirectPage = 'proposals';
+      }
+      else{
+        $redirectPage = 'optin';
+      }      
+    }
+    return $redirectPage;
   }
+
+  
 
 
 }

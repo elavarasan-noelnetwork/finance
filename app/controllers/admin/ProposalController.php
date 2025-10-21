@@ -13,24 +13,20 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 //use your own models 
 use app\models\Model;
-use app\models\ProposalModel;
+use app\models\LoanModel;
 use core\View as View;
 use app\controllers\CommonController;
-use app\controllers\PdfController;
-use app\controllers\CustomPdfExceptionController;
-use app\models\CompanyModel;
-use app\models\ProposalImageModel;
 use Exception;
 
 class ProposalController extends Controller
 {
 
-  private $proposalModelObj;
+  private $loanModelObj;
 
   public function __construct()
   {
     //Initialize the model object
-    $proposalModelObj = new ProposalModel();
+    $loanModelObj = new LoanModel();
   }
 
   // Function to render the proposal list page
@@ -49,21 +45,27 @@ class ProposalController extends Controller
       }
 
       // Store or update session filters
-      $_SESSION['proposal']['filters']['company'] = @trim($_GET['company']) ?? '';
-      $_SESSION['proposal']['filters']['project'] = @trim($_GET['project']) ?? '';
-      $_SESSION['proposal']['filters']['customer'] = @trim($_GET['customer']) ?? '';
+      $_SESSION['proposal']['filters']['application'] = @trim($_GET['application']) ?? '';
+      $_SESSION['proposal']['filters']['property'] = @trim($_GET['property']) ?? '';
+      $_SESSION['proposal']['filters']['type'] = @trim($_GET['type']) ?? '';
+      $_SESSION['proposal']['filters']['source'] = @trim($_GET['source']) ?? '';
       $_SESSION['proposal']['filters']['status'] = @trim($_GET['status']) ?? '';
     }
 
     //validate search input
     if (isset($_GET['submit'])) {
-      if (empty($_GET['company']) && empty($_GET['project']) && empty($_GET['customer']) && empty($_GET['status'])) {
+      if (empty($_GET['application']) && empty($_GET['property']) && empty($_GET['type']) && empty($_GET['source']) && empty($_GET['status'])) {
         $setSearchError = true;
       }
     }
 
-    //get company details   
-    $companyArray = CommonController::getCompanies(1);
+    //define input arrays
+    $propertyArray = PROPERTY_NAME_ARRAY;
+    $buyingTypeArray = BUYING_TYPE_NAME_ARRAY;
+    $statusArray = LOAN_STATUS_ARRAY;
+
+    $soueceArray['loan'] = 'Loan';
+    $soueceArray['cash'] = 'Cash';
 
     //render list template
     $page_data = ["app_name" => APP_NAME, "route" => $route];
@@ -72,7 +74,10 @@ class ProposalController extends Controller
       [
         "page_data" => $page_data,
         "search_error" => $setSearchError,
-        "companyDetails" => $companyArray,
+        "property_array" => $propertyArray,
+        "buying_type_array" => $buyingTypeArray,
+        "source_array" => $soueceArray,
+        "status_array" => $statusArray,
       ]
     );
   }
@@ -91,52 +96,51 @@ class ProposalController extends Controller
       $length = intval($request['length']);
       $orderColumnIndex = $request['order'][0]['column']; // e.g., 0
       $orderDirection = $request['order'][0]['dir']; // 'asc' or 'desc'      
-      $company     = $request['company'];
-      $project     = $request['project'];
-      $customer     = $request['customer'];
-      $status     = $request['status'];
+      $application     = $request['application'];
+      $property     = $request['property'];
+      $type     = $request['type'];
+      $source     = $request['source'];
 
       //set column mapping 
-      $columns = ['p.pro_code', 'p.pro_created_on', 'p.pro_title', 'p.pro_project_address', 'p.pro_water_mark_inc', 'p.pro_agrement_page_inc', 'p.pro_customer_name', 'p.pro_customer_address', 'p.pro_status'];
+      $columns = ['p.zl_id', 'p.zl_user_id', 'p.zl_code', 'p.zl_property_id', 'p.zl_buying_as_id', 'p.zl_applicant_count', 'p.zl_fname', 'p.zl_lname', 'p.zl_fname2', 'p.zl_lname2', 'p.zl_trust_name', 'p.zl_trust_setup_required', 'p.zl_smsf_name', 'p.zl_smsf_setup_required', 'p.zl_loan_required', 'p.zl_cash_investment', 'p.zl_status', 'p.zl_loan_progress_percentage', 'p.zl_created_on', 'p.zl_created_by', 'c.zlu_fname', 'c.zlu_lname'];
       $orderColumnName = $columns[$orderColumnIndex];
 
-      Model::$db->join("ne_companies c", "c.com_id = p.pro_com_id", "LEFT");
+      Model::$db->join("zeon_loan_users c", "c.zlu_id = p.zl_user_id", "LEFT");
 
       // Total count without filtering
-      $totalRecords = Model::$db->copy()->getValue("ne_proposals p", "count(*)");
+      $totalRecords = Model::$db->copy()->getValue("zeon_loan p", "count(*)");
 
       // Apply search
-      if (!empty($project)) {
+      if (!empty($application)) {
         Model::$db->where(
-          "(p.pro_code LIKE ? OR p.pro_title LIKE ? OR p.pro_project_address  LIKE ?)",
-          ["%$project%", "%$project%", "%$project%"]
+          "(p.zl_code LIKE ? OR p.zl_trust_name LIKE ? OR p.zl_smsf_name  LIKE ? OR p.zl_fname  LIKE ? OR p.zl_lname  LIKE ? OR p.zl_fname2  LIKE ? OR p.zl_lname2  LIKE ?)",
+          ["%$application%", "%$application%", "%$application%", "%$application%", "%$application%", "%$application%", "%$application%"]
         );
       }
 
-      if (!empty($customer)) {
-        Model::$db->where(
-          "(p.pro_customer_name LIKE ? OR p.pro_customer_address LIKE ?)",
-          ["%$customer%", "%$customer%"]
-        );
+      if (!empty($property)) {
+        Model::$db->where('p.zl_property_id', $property);
       }
 
-      if (!empty($status)) {
-        Model::$db->where('p.pro_status', $status);
+      if (!empty($type)) {
+        Model::$db->where('p.zl_buying_as_id', $type);
       }
 
-      if (!empty($company)) {
-        Model::$db->where('p.pro_com_id', $company);
+      if (!empty($source)) {
+        if (strtolower($source) == 'loan')
+          Model::$db->where('p.zl_loan_required', 1);
+        else if (strtolower($source) == 'cash')
+          Model::$db->where('p.zl_cash_investment', 1);
       }
-
 
       $filteredDb = Model::$db->copy();
-      $totalFiltered = $filteredDb->getValue("ne_proposals p", "count(*)");
+      $totalFiltered = $filteredDb->getValue("zeon_loan p", "count(*)");
 
       // Pagination
       //Model::$db->orderBy("u.usr_id", "desc");
       Model::$db->orderBy($orderColumnName, $orderDirection);
       Model::$db->pageLimit = $length;
-      $proposals = Model::$db->paginate("ne_proposals p", ($start / $length) + 1);
+      $proposals = Model::$db->paginate("zeon_loan p", ($start / $length) + 1);
       //echo "<pre>";print_r($proposals);exit;
 
       // If no records found, return empty data
@@ -153,67 +157,209 @@ class ProposalController extends Controller
       // Prepare data for DataTables
       $data = [];
       foreach ($proposals as $row) {
+        $downloadLink = '';
+        $deleteLink = '';
+        $continueLink = '';
+        $viewLink = '';
+
         $statusLabel = '';
-        if ($row['pro_status'] == 1) {
-          $statusLabel = '<label class="badge badge-success">Active</label>';
-        } elseif ($row['pro_status'] == 2) {
-          $statusLabel = '<label class="badge badge-warning">Inactive</label>';
+        if (!empty(LOAN_STATUS_ARRAY[$row['zl_status']])) {
+          $statusLabel = '<label style="border-radius:50px;" class="badge badge-success">' . LOAN_STATUS_ARRAY[$row['zl_status']] . '</label>';
+        } else {
+          $statusLabel = '<label style="border-radius:50px;" class="badge badge-warning">NA</label>';
         }
 
-        $waterMark = 'No';
-        if ($row['pro_water_mark_inc'] == 1) {
-          $waterMark = 'Yes';
+        $sourceValue = 'NA';
+        if ($row['zl_loan_required'] == 1) {
+          $sourceValue = 'Loan';
+        } elseif ($row['zl_cash_investment'] == 1) {
+          $sourceValue = 'Cash';
         }
 
-        $agreement = 'No';
-        if ($row['pro_agrement_page_inc'] == 1) {
-          $agreement = 'Yes';
-        }
 
-        //preview logo
-        $logoPreview = 'NA';
-        if (!empty($row['com_logo'])) {
-          $tmpPath = COM_LOGO_PATH . $row['com_logo'];
-          $tmpUrl = COM_LOGO_URL . $row['com_logo'];
-          if (file_exists($tmpPath)) {
-            $logoPreview = '<img src="' . $tmpUrl . '" alt="Preview" 
-              style="width:100px; height:50px; object-fit:contain;  border-radius:6px; padding:4px;">';
+        //set actions links
+        if (!empty(LOAN_STATUS_ARRAY[$row['zl_status']])) {
+          if ($row['zl_status'] == 10) {
+         
+            if (isset($row['zl_trust_setup_required']) && $row['zl_trust_setup_required'] == 1) {
+              if (isset($row['zl_trust_smsf_app_completed']) && $row['zl_trust_smsf_app_completed'] == 0) {
+                $sourceRedirectValue = 'trust/'.$row['zl_id'];
+              }  
+              elseif ($row['zl_loan_required'] == 1) {
+                $sourceRedirectValue = 'application';  
+              }              
+            }   
+            elseif (isset($row['zl_smsf_setup_required']) && $row['zl_smsf_setup_required'] == 1) {              
+              if (isset($row['zl_trust_smsf_app_completed']) && $row['zl_trust_smsf_app_completed'] == 0) {
+                $sourceRedirectValue = 'smsf/'.$row['zl_id'];
+              }  
+              elseif ($row['zl_loan_required'] == 1) {
+                $sourceRedirectValue = 'application';  
+              }              
+            }    
+            elseif ($row['zl_loan_required'] == 1) {
+              $sourceRedirectValue = 'application';
+            }                              
+
+$continueLink = '                          
+<div class="d-flex gap-2">
+  <a href="'.$sourceRedirectValue.'" title="Continue Progress" style="text-decoration: none;">
+    <button type="button" class="btn btn-outline-danger blink-icon rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 36px; height: 36px;">
+      <i class="typcn typcn-arrow-right-thick" style="font-size: 18px; color: red;"></i>
+    </button>                      
+  </a>
+</div>
+
+<style>
+@keyframes blink {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0;
+  }
+}
+
+/* Makes the entire button (circle + icon) blink */
+.blink-icon {
+  animation: blink 1.5s infinite;
+}
+
+/* Ensures the border is red */
+.btn-outline-danger {
+  border-color: red;
+  color: red;
+}
+</style>
+';
           }
-        }        
+        }
 
-        $pdfPreviewUrl = PDF_UPLOAD_URL.$row['pro_generated_pdf'];
-        
-        $data[] = [
-          'code' => $row['pro_code'] ? $row['pro_code'] : 'NA',
-          'created_on' => date('d-m-Y H:i', strtotime($row['pro_created_on'])),
-          'title' => $logoPreview,
-          'logo' => $row['pro_title'] ? $row['pro_title'] : 'NA',
-          'location' => $row['pro_project_address'] ? $row['pro_project_address'] : 'NA',
-          'agreement' => $agreement,
-          'customer' => $row['pro_customer_name'] ? $row['pro_customer_name'] : 'NA',
-          'address' => $row['pro_customer_address'] ? $row['pro_customer_address'] : 'NA',
-          'status' => $statusLabel,
-          'actions' => '
-                        <div class="d-flex gap-2">
-                          <a href="#" title="Preview PDF" style="text-decoration: none;" onclick="openPdfViewer(\''.$pdfPreviewUrl.'\')">
-                            <button type="button" class="btn btn-outline-info rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 36px; height: 36px;">
-                              <i class="typcn typcn-zoom" style="font-size: 18px;"></i>
-                            </button>                      
-                          </a>
 
-                          <a href="' . BASE_URL . 'downloadPdf/' . $row['pro_generated_pdf'] . '" title="dowload PDF" style="text-decoration: none;">
+        $downloadLink = '
+                      <a href="#" title="Dowload Document" style="text-decoration: none;">
+                        <button type="button" class="btn btn-outline-info rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 36px; height: 36px;">
+                          <i class="typcn typcn-download" style="font-size: 18px;"></i>
+                        </button>                      
+                      </a>';
+
+        $deleteLink = '
+                          <a href="#" title="Dowload Document" style="text-decoration: none;">
                             <button type="button" class="btn btn-outline-info rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 36px; height: 36px;">
                               <i class="typcn typcn-download" style="font-size: 18px;"></i>
                             </button>                      
-                          </a>
-                                                            
-                          <a href="#" title="Delete" style="text-decoration: none;" onclick="showSwal(\'delete\')">                          
+                          </a>';
+
+
+
+        $viewLink = '                          
+                        <div class="d-flex gap-2">
+                          <a href="#" title="view Application" style="text-decoration: none;" >
                             <button type="button" class="btn btn-outline-info rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 36px; height: 36px;">
-                              <i class="typcn typcn-trash" style="font-size: 18px;"></i>
+                              <i class="typcn typcn-zoom" style="font-size: 18px;"></i>
                             </button>                      
-                          </a>      
-                        </div>        
-                        '
+                          </a> ';
+
+        /*
+        $progressValue = isset($row['job_completed_percentage']) && $row['job_completed_percentage']
+          ? round($row['job_completed_percentage'])
+          : 0;
+        */
+
+        $progressValue = $row['zl_loan_progress_percentage'];
+
+        /* This is for sample data purpose */
+        $progressBar = '
+            <div class="progress-circle" style="--percent:' . $progressValue . '">
+              <svg class="progress-ring" viewBox="0 0 120 120">
+                <!-- Background Circle -->
+                <circle class="progress-ring__bg" cx="60" cy="60" r="54" />
+                <!-- Progress Circle -->
+                <circle class="progress-ring__progress" cx="60" cy="60" r="54" />
+              </svg>
+              <div class="progress-text">' . $progressValue . '<span class="small-percent">%</span></div>
+            </div>';
+
+        //set details
+        $details = '<span class="text-muted">NA</span>';
+
+        if ($row['zl_buying_as_id'] == 1) { // Individual
+          $details  = '<div class="info-row">';
+          $details .= '<i class="typcn typcn-user"></i> ';
+          $details .= '<span class="label">Applicant Count :</span> ';
+          $details .= '<span class="value">' . htmlspecialchars($row['zl_applicant_count']) . '</span>';
+          $details .= '</div>';
+
+          $details .= '<div class="info-row">';
+          $details .= '<i class="typcn typcn-user-outline"></i> ';
+          $details .= '<span class="label">First Applicant :</span> ';
+          $details .= '<span class="value">' . htmlspecialchars($row['zl_fname']) . ' ' . htmlspecialchars($row['zl_lname']) . '</span>';
+          $details .= '</div>';
+
+          if (!empty($row['zl_fname2']) || !empty($row['zl_lname2'])) {
+            $details .= '<div class="info-row">';
+            $details .= '<i class="typcn typcn-user-add"></i> ';
+            $details .= '<span class="label">Second Applicant :</span> ';
+            $details .= '<span class="value">' . htmlspecialchars($row['zl_fname2']) . ' ' . htmlspecialchars($row['zl_lname2']) . '</span>';
+            $details .= '</div>';
+          }
+        } elseif ($row['zl_buying_as_id'] == 2) { // Trust
+          $details  = '<div class="info-row">';
+          $details .= '<i class="typcn typcn-briefcase"></i> ';
+          $details .= '<span class="label">Trust Name :</span> ';
+          $details .= '<span class="value">' . htmlspecialchars($row['zl_trust_name']) . '</span>';
+          $details .= '</div>';
+
+          if ($row['zl_trust_setup_required'] == 1) {
+            $details .= '<div class="info-row">';
+            $details .= '<i class="typcn typcn-tick text-success"></i> ';
+            $details .= '<span class="label">Trust Setup :</span> ';
+            $details .= '<span class="value text-success">Required</span>';
+            $details .= '</div>';
+          } elseif ($row['zl_trust_setup_required'] == 2) {
+            $details .= '<div class="info-row">';
+            $details .= '<i class="typcn typcn-times text-danger"></i> ';
+            $details .= '<span class="label">Trust Setup :</span> ';
+            $details .= '<span class="value text-danger">Not Required</span>';
+            $details .= '</div>';
+          }
+        } elseif ($row['zl_buying_as_id'] == 3) { // SMSF
+          $details  = '<div class="info-row">';
+          $details .= '<i class="typcn typcn-briefcase"></i> ';
+          $details .= '<span class="label">SMSF Name :</span> ';
+          $details .= '<span class="value">' . htmlspecialchars($row['zl_smsf_name']) . '</span>';
+          $details .= '</div>';
+
+          if ($row['zl_smsf_setup_required'] == 1) {
+            $details .= '<div class="info-row">';
+            $details .= '<i class="typcn typcn-tick text-success"></i> ';
+            $details .= '<span class="label">SMSF Setup :</span> ';
+            $details .= '<span class="value text-success">Required</span>';
+            $details .= '</div>';
+          } elseif ($row['zl_smsf_setup_required'] == 2) {
+            $details .= '<div class="info-row">';
+            $details .= '<i class="typcn typcn-times text-danger"></i> ';
+            $details .= '<span class="label">SMSF Setup :</span> ';
+            $details .= '<span class="value text-danger">Not Required</span>';
+            $details .= '</div>';
+          }
+        }
+
+
+        $data[] = [
+          'code' => $row['zl_code'] ? '<b>' . $row['zl_code'] . '</b>' : 'NA',
+          'created_on' => date('d-m-Y H:i', strtotime($row['zlu_created_on'])),
+          'property' => PROPERTY_NAME_ARRAY[$row['zl_property_id']] ? PROPERTY_NAME_ARRAY[$row['zl_property_id']] : 'NA',
+          'Type' => BUYING_TYPE_NAME_ARRAY[$row['zl_buying_as_id']] ? BUYING_TYPE_NAME_ARRAY[$row['zl_buying_as_id']] : 'NA',
+          'Details' => $details,
+          'Source' => $sourceValue,
+          'Status' => $statusLabel,
+          'Progress' => $progressBar,
+          'actions' => '
+                        <div class="d-flex gap-2">
+                        ' . $continueLink . '
+                        ' . $viewLink . '
+                        </div>'
         ];
       }
       //echo "<pre>";print_r($data);exit;
@@ -228,6 +374,7 @@ class ProposalController extends Controller
     }
   }
 
+  /*
   // Function to render the add proposal form
   // This function is called when the user clicks on "Add Proposal" button
   public function addproposal($route)
@@ -298,26 +445,7 @@ class ProposalController extends Controller
 
       // If prop is set, it means we are updating an existing department
       if (isset($post_data['pro_id']) && !empty($post_data['pro_id'])) {
-        /*
-        //update process
-        $whereUpdate["dep_id"] = $post_data['dep_id'];
-        $post_data['dep_updated_by'] = $_SESSION['auth']['user_id'];
-        $post_data['dep_updated_on'] = date('Y-m-d H:i:s');
 
-        $res =  $this->_OdepartmentModel->update($post_data, $whereUpdate);
-        if ($res) {
-          // If update is successful, set a success message
-          $_SESSION['department']['flash'] = [
-            'type' => 'success', // or 'error', 'warning'
-            'message' => 'Department updated successfully!'
-          ];
-          header("Location: departments");
-          exit;
-        } else {
-          // If update fails, set an error message   
-          $errorArray[] = "Failed to update user. Please try again.";
-        }
-        */
       } else {
 
         //get company details
@@ -389,24 +517,7 @@ class ProposalController extends Controller
                       } else {
                         Model::$db->commit();
 
-                        //set sucess
-                        /*
-                        $_SESSION['department']['flash'] = [
-                          'type' => 'success', // or 'error', 'warning'
-                          'fileName' => $pdfFileName
-                        ];
 
-                        // ✅ Query executed successfully
-                        // Could have changed rows OR matched nothing / same data
-                        
-                        // If insert is successful, set a success message
-                        $_SESSION['department']['flash'] = [
-                          'type' => 'success', // or 'error', 'warning'
-                          'message' => 'Proposal generated sucessfully!'
-                        ];
-                        header("Location: departments");
-                        exit;
-                        */
                         $response = [
                           'success' => true,
                           'fileName' => $pdfFileName
@@ -469,8 +580,9 @@ class ProposalController extends Controller
       echo json_encode($response);
       exit;
     }
+    */
 
-    /*
+  /*
     $response = [
         'success' => true,
         'message' => 'Proposal saved successfully!'
@@ -481,8 +593,9 @@ class ProposalController extends Controller
         'message' => 'Something went wrong.'
     ];
     */
-  }
+  //}
 
+  /*
   //move temp files to director
   public function moveFilestofolder($ipFiles)
   {
@@ -532,6 +645,7 @@ class ProposalController extends Controller
     return false;
   }
 
+  /*
   public function downloadPdf($route)
   {
     //$pdfFileName = "ameen_68c15942b830e.pdf";
@@ -624,4 +738,5 @@ class ProposalController extends Controller
     }
     return false;
   }
+  */
 }

@@ -17,17 +17,6 @@ use app\models\UserModel;
 class LoanApplicationController extends Controller
 {
 
-  public function home($route)
-  {
-    $page_data = ["app_name" => APP_NAME, "route" => $route];
-    View::render(
-      "admin/application/application",
-      [
-        "page_data" => $page_data
-      ]
-    );
-    exit;
-  }
 
   public function optin($route)
   {
@@ -46,6 +35,7 @@ class LoanApplicationController extends Controller
     $errorArray = array();    
     $post_data = array();
     $successFlag = false;
+    $redirectPage="proposals";
 
     if(!empty($_POST) && count($_POST)>0){
 
@@ -60,12 +50,17 @@ class LoanApplicationController extends Controller
       //set loan and cash
       if(!empty($_POST['loan_help']) && strtoupper($_POST['loan_help']) == "YES"){
         $post_data['zl_loan_required'] = 1;
-        $post_data['zl_cash_investment'] = 2;
       }
-      if(!empty($_POST['loan_help']) && strtoupper($_POST['loan_help']) == "NO"){
+      elseif(!empty($_POST['loan_help']) && strtoupper($_POST['loan_help']) == "NO"){
         $post_data['zl_loan_required'] = 2;
+      } 
+      
+      if(!empty($_POST['cash_available']) && strtoupper($_POST['cash_available']) == "YES"){
         $post_data['zl_cash_investment'] = 1;
-      }    
+      }
+      if(!empty($_POST['cash_available']) && strtoupper($_POST['cash_available']) == "NO"){
+        $post_data['zl_cash_investment'] = 2;
+      }       
 
       //for individual
       if(!empty($_POST['buyer_type'])){
@@ -85,12 +80,63 @@ class LoanApplicationController extends Controller
           $post_data['zl_smsf_setup_required'] = OPTION_YES_NO_ARRAY[$_POST['smsf_help']] ? OPTION_YES_NO_ARRAY[$_POST['smsf_help']] : '-';;
         }            
       }
+
+
       
       //set status
-      $loanStatus =1;
-      if(!empty($post_data['zl_cash_investment']) && $post_data['zl_cash_investment']==1){
-        $loanStatus =2;
+      $loanStatus=10; //application in progress      
+      if(!empty($post_data['zl_buying_as_id'])){        
+        
+        if($post_data['zl_buying_as_id'] == 1){ //individual
+
+          if($post_data['zl_loan_required'] == 1){
+            $loanStatus=10; //application in progress
+            $redirectPage = "application";
+          }
+          elseif($post_data['zl_cash_investment'] == 1){
+            $loanStatus=60; //Legal Review
+            $redirectPage = "proposals";
+          }          
+
+
+        }
+        elseif($post_data['zl_buying_as_id'] == 2){ //trust
+          if(!empty($post_data['zl_trust_setup_required']) && $post_data['zl_trust_setup_required'] == 1){
+            $loanStatus=10; //application in progress
+            $redirectPage = "trust";
+          }
+          else{
+            if($post_data['zl_loan_required'] == 1){
+              $loanStatus=10; //application in progress
+              $redirectPage = "application";
+            }
+            elseif($post_data['zl_cash_investment'] == 1){
+              $loanStatus=60; //Legal Review
+              $redirectPage = "proposals";
+            }              
+          }
+        }
+        elseif($post_data['zl_buying_as_id'] == 3){ //smsf
+          if(!empty($post_data['zl_smsf_setup_required']) && $post_data['zl_smsf_setup_required'] == 1){
+            $loanStatus=10; //application in progress
+            $redirectPage = "smsf";
+          }
+          else{
+            if($post_data['zl_loan_required'] == 1){
+              $loanStatus=10; //application in progress
+              $redirectPage = "application";
+            }
+            elseif($post_data['zl_cash_investment'] == 1){
+              $loanStatus=60; //Legal Review
+              $redirectPage = "proposals";
+            }              
+          }          
+        }
       }
+
+      //set status input
+      $post_data['zl_status'] = $loanStatus;
+      $post_data['zl_loan_progress_percentage'] = LOAN_PROGRESS_PERCNTAGE_ARRAY[$loanStatus];
 
       //db insert process
       $this->loanModel = new LoanModel();
@@ -120,9 +166,38 @@ class LoanApplicationController extends Controller
 
       //if all success
       if($successFlag){
+
+        $_SESSION['auth']['user_redirect']='proposals';
+        $_SESSION['auth']['user_application'] = 1;
         Model::$db->commit();
-        header("Location: application");
-        exit;        
+
+        $redirectPageWithId = $redirectPage;
+        if($redirectPage == "trust" || $redirectPage == "smsf"){
+          $redirectPageWithId = $redirectPage."/".$loanResult;
+        }
+
+        //set success message
+        if(in_array($redirectPage, ['proposals'])){
+            $_SESSION['proposal']['flash'] = [
+              'type' => 'success', // or 'error', 'warning'
+              'message' => 'Application saved successfully!'
+            ];
+        }        
+
+        header("Location: ".$redirectPageWithId);
+        exit;    
+         
+        /*
+        if(!empty($_POST['loan_help']) && strtoupper($_POST['loan_help']) == "YES"){
+          header("Location: application");
+          exit;
+        }
+        elseif(!empty($_POST['loan_help']) && strtoupper($_POST['loan_help']) == "NO"){
+          header("Location: proposals");
+          exit;
+        }
+        */
+
       }
 
     }

@@ -10,31 +10,25 @@
 
   var form = $("#example-vertical-wizard");
   const categoryFilesMap = {};
-
-  $.validator.addMethod("nineDigitNumber", function (value, element) {
-    // remove spaces if any
-    var cleaned = value.replace(/\s+/g, '');
-    return this.optional(element) || (/^\d{9}$/).test(cleaned);
-  }, "Please enter exactly 9 digits.");
-
   form.validate({
     errorPlacement: function errorPlacement(error, element) {
-      element.after(error);
+      element.before(error);
     },
     ignore: [],
     rules: {
-      phone_number: {
+      job_title: {
         required: true,
-        nineDigitNumber: true
-      }           
+        minlength: 5,
+        maxlength: 255,
+      }
     },
     messages: {
-      phone_number: {
-        required: "Phone number is required",
-        nineDigitNumber: "Please enter exactly 9 digits"
-      }    
+      job_title: {
+        required: "Please enter a job title",
+        minlength: "At least 5 characters required",
+        maxlength: "No more than 255 characters allowed",
+      }
     }
-
   });
 
   let blockBackNavigation = false;
@@ -67,42 +61,29 @@
         return false;
       }
 
-      /*  for (let key in editorInstances) {
-         const editor = editorInstances[key];
-         const data = editor.getData();
-         document.querySelector(`#${key}`).value = data;
-       } */
+      for (let key in editorInstances) {
+        const editor = editorInstances[key];
+        const data = editor.getData();
+        document.querySelector(`#${key}`).value = data;
+      }
 
       const currentStep = form.find("section").eq(currentIndex);
       const formData = new FormData();
 
       currentStep.find("input, select, textarea").each(function () {
         const name = $(this).attr("name");
-        const type = $(this).attr('type');
         const value = $(this).val();
-
-
-        if (name && ((type === 'radio' && $(this).is(':checked')) || (type === 'checkbox' && $(this).is(':checked'))
-          || (type !== 'radio' && type !== 'checkbox' && value !== '' && value !== null))) {
-
-          formData.append(name, value);
-        }
+        if (name) formData.append(name, value);
       });
 
-      // 🔍 (For testing) Log all the fields that will be sent
-      console.log('Filtered Form Data:');
-      for (const [key, val] of formData.entries()) {
-        console.log(key, val);
-      }
-
-      // formData.append('job_id', $('#job_id').val());
-      //formData.append('job_reference', $('#job_reference').val());
+      formData.append('job_id', $('#job_id').val());
+      formData.append('job_reference', $('#job_reference').val());
       $('.loading').removeClass('hide');
 
       let allowNextStep = false;
 
       $.ajax({
-        url: "/ajaxaddfinancedetails",
+        url: "/ajaxaddjob",
         method: "POST",
         data: formData,
         processData: false,
@@ -110,33 +91,24 @@
         async: false,
         success: function (response) {
 
-          // /console.log(ajaxaddfinancedetails);
-
-          //return false;
-
-
+          
           $('.loading').addClass('hide');
           let data = JSON.parse(response);
           if (data.status == true) {
             $('.alert-danger').hide();
             // Populate success alert
-
-            $('#loan_id').val(data.loan_id);
+            $('.job-reference').html(data.job_reference);
+            $('#job_reference').val(data.job_reference);
+            $('#job_id').val(data.job_id);
             // Show success alert
             $('.alert-success').removeClass('fade hide').addClass('show').show();
-
-            swal("Your personal details added successfully! continue the other forms", {
-              icon: "success",
-              timer: 3000,
-              buttons: false
-            });
             blockBackNavigation = false
             allowNextStep = true;
           }
           else {
             $('.alert-success').hide();
             // Populate error alert message
-            $('.error-message').text(data.message || "Your personal details not inserted. Please try again later.");
+            $('.error-message').text(data.message || "Project could not be created. Please try again later.");
             // Show error alert
             $('.alert-danger').removeClass('fade hide').addClass('show').show();
             $('html, body').animate({
@@ -146,13 +118,9 @@
             allowNextStep = false;
           }
 
-          /**/
-
         }
 
       });
-
-      //allowNextStep = true;
 
       return allowNextStep;
     },
@@ -233,11 +201,11 @@
     },
 
     onFinished: function (currentIndex) {
-      /*  for (let key in editorInstances) {
-         const editor = editorInstances[key];
-         const data = editor.getData();
-         document.querySelector(`#${key}`).value = data;
-       } */
+      for (let key in editorInstances) {
+        const editor = editorInstances[key];
+        const data = editor.getData();
+        document.querySelector(`#${key}`).value = data;
+      }
 
       const allData = new FormData(form[0]);
 
@@ -312,10 +280,10 @@
 
   /*
   document.getElementById('add-category-btn').addEventListener('click', () => {
-  
+
     const addCategoryBtnStle = document.getElementById('add-category-btn');
     const maxServiceCount = MAX_SERVICE_CREATION_COUNT;
-  
+
     if (categoryCount >= maxServiceCount) {
         swal({
             title: "Limit reached",
@@ -328,29 +296,29 @@
         });
         return; // prevent adding more
     }
-  
+
     const template = document.getElementById('category-template').content.cloneNode(true);
     const block = template.querySelector('.category-block');
     const currentIndex = categoryCount++;
     categoryFilesMap[currentIndex] = [];
     block.querySelector('.category-title').textContent = `Service ${currentIndex + 1}`;
-  
-  
+
+
     // Hide the add button if limit reached
     if (categoryCount >= maxServiceCount) {
         addCategoryBtnStle.style.display = 'none';
     }    
-  
+
     const dropZone = block.querySelector('.dropZone');
     const fileInput = block.querySelector('input[type="file"]');
     const preview = block.querySelector('.filePreview');
     fileInput.classList.add('hidden-file-input');
     fileInput.name = `categories[${currentIndex}][files][]`;
-  
+
     const descriptionTextarea = block.querySelector('.service_description');
     const uniqueEditorId = `service_description_${currentIndex}`;
     descriptionTextarea.id = uniqueEditorId;
-  
+
     ClassicEditor.create(descriptionTextarea)
       .then(editor => {
         editorInstances[uniqueEditorId] = editor;
@@ -361,7 +329,7 @@
       .catch(error => {
         console.error("CKEditor init error:", error);
       });
-  
+
     const closeBtn = document.createElement('button');
     closeBtn.className = 'category-close-btn';
     closeBtn.innerHTML = '&times;';
@@ -369,9 +337,9 @@
     closeBtn.onclick = () => {
       const thisBlock = block;
       const thisEditorId = uniqueEditorId;
-  
+
       showSwal('remove-block');
-  
+
       // Wait for SweetAlert's promise to resolve
       swal({
         title: "Are you sure?",
@@ -398,26 +366,26 @@
           thisBlock.remove();
           delete editorInstances[thisEditorId];
            categoryCount--; // decrease count when a block is removed
-  
+
           // Show the add button again if under limit
           if (categoryCount < maxServiceCount) {
               addCategoryBtnStle.style.display = 'inline-block';
           }
-  
+
         }
       });
     };
     block.prepend(closeBtn);
-  
+
     dropZone.addEventListener('dragover', (e) => {
       e.preventDefault();
       dropZone.classList.add('dragover');
     });
-  
+
     dropZone.addEventListener('dragleave', () => {
       dropZone.classList.remove('dragover');
     });
-  
+
     dropZone.addEventListener('drop', (e) => {
       e.preventDefault();
       dropZone.classList.remove('dragover');
@@ -425,17 +393,17 @@
       updateFileInput(fileInput, categoryFilesMap[currentIndex]);
       handleCategoryFiles(fileInput, categoryFilesMap[currentIndex], categoryFilesMap, preview, currentIndex);
     });
-  
+
     fileInput.addEventListener('change', (e) => {
       mergeFiles(currentIndex, e.target.files);
       updateFileInput(fileInput, categoryFilesMap[currentIndex]);
       handleCategoryFiles(fileInput, categoryFilesMap[currentIndex], categoryFilesMap, preview, currentIndex);
     });
-  
+
     dropZone.addEventListener('click', () => {
       fileInput.click();
     });
-  
+
     document.getElementById('categories-block').appendChild(block);
   });
   */

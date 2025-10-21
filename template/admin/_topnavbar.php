@@ -7,11 +7,10 @@
 */
 ?>
 
-
 <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
   <div class="navbar-brand-wrapper d-flex justify-content-center custom-navbar">
     <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-      <a class="navbar-brand brand-logo" href="#">
+      <a class="navbar-brand brand-logo" href="<?php echo BASE_URL; ?><?php echo $_SESSION['auth']['user_redirect']?>">
         <img src="<?php echo ASSETS_DIR; ?>/images/zeon.png" alt="logo" />
       </a>
     </div>
@@ -22,7 +21,7 @@
               <p class="mb-0">Last login was 23 hours ago.</p>
           </li> -->
       <li class="nav-item nav-profile dropdown">
-        <a class="nav-link" href="#" data-bs-toggle="dropdown" id="profileDropdown">
+        <a class="nav-link" href="<?php echo $_SESSION['auth']['user_redirect']?>" data-bs-toggle="dropdown" id="profileDropdown">
           <img src="<?php echo ASSETS_DIR; ?>/images/user.png" alt="profile" class="profile-pic" />
           <span class="nav-profile-name">
 

@@ -55,7 +55,7 @@ use core\View as View;
     .form-sidebar-menu {
         width: 300px;
         flex-shrink: 0;
-        min-height: 750px;
+        min-height: 780px;
         background: #e5fffe;
         border-right: 1px solid #056a67;
         padding-right: 10px;
@@ -75,6 +75,19 @@ use core\View as View;
         font-size: 14px;
         transition: all 0.2s ease;
     }
+
+    .form-sidebar-menu .menu-item-dashboard {
+        background: #bfdfed;
+        color: #434a54;
+        font-weight: 600;
+        padding: 18px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        margin-bottom: 10px;
+        /* 🆕 Adds space between menu items */
+    }    
 
     .form-content {
         width: calc(100% - 300px);
@@ -118,15 +131,16 @@ use core\View as View;
 
     input.form-control {
         border: #6ec3c0 1px solid;
-        width: 500px;
+        width: 450px;
         max-width: 100%;
         background-color: #c9fffd;
+        padding : 0.6rem 0.6rem !important;
     }
 
     .label-question {
         font-weight: 600;
         padding-top: 0px;
-        padding-bottom: 15px;
+        padding-bottom: 10px;
         font-size: 1rem;
     }
 
@@ -180,9 +194,10 @@ use core\View as View;
         margin-top: 40px;
         background: #056a67;
         border: none;
-        padding: 12px 35px;
+        padding: 8px 15px;
         color: #fff;
         font-size: 16px;
+        font-weight: 400;
         border-radius: 6px;
         cursor: pointer;
     }
@@ -245,7 +260,16 @@ use core\View as View;
 
                                             <!-- Sidebar -->
                                             <div class="form-sidebar-menu">
-                                                <div class="menu-item">1. Ownership details</div>
+                                                <?php
+                                                if (isset($_SESSION['auth']['user_application']) && $_SESSION['auth']['user_application'] == 1) {
+                                                ?>
+                                                    <a href="<?php echo BASE_URL; ?>proposals" style="text-decoration:none;color:#434a54">
+                                                        <div class="menu-item-dashboard">Dashboard</div>
+                                                    </a>
+                                                <?php
+                                                }
+                                                ?>                                                  
+                                                <div class="menu-item"> Ownership details</div>
                                             </div>
 
                                             <!-- Content -->
@@ -269,7 +293,7 @@ use core\View as View;
                                                 <?php  } ?>                                            
 
                                                 <div class="form-body">
-                                                    <div style="font-weight:600; font-size:1.5rem; margin-bottom:40px;color:#056a67;display:flex; align-items:center; gap:8px;">
+                                                    <div style="font-weight:600; font-size:1.5rem; margin-bottom:30px;color:#056a67;display:flex; align-items:center; gap:8px;">
                                                         <img src="<?php echo ASSETS_DIR; ?>/images/house.jpg" alt="map" width="35" height="35" />
                                                         Ownership details
                                                     </div>

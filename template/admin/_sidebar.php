@@ -3,10 +3,17 @@
 use app\controllers\CommonController;
 
 $_OcommonCtrl = new CommonController();
-$_AbackEndMenu = $_OcommonCtrl->getRoleBasedBackendMenu($_SESSION['auth']['user_role']);
+//$_AbackEndMenu = $_OcommonCtrl->getRoleBasedBackendMenu($_SESSION['auth']['user_role']);
+
+$_AbackEndMenu[1]['men_name'] = 'Applications';
+$_AbackEndMenu[1]['men_page'] = 'proposals';
+$_AbackEndMenu[1]['men_icon'] = 'home-outline';
+
 
 // Resolve current page to highlight active link
 $currentPage=$_OcommonCtrl->getCurrentPageName();
+
+
 
 if (!empty($currentPage)) {
   $routeAliases = [
