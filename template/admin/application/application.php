@@ -706,6 +706,74 @@ use core\View as View;
 }
 </style>
 
+<style>
+  /* Accordion container style */
+  .accordion-header {
+    width: 50%;
+    background: #33d4cf; /* folded background color */
+    border-radius: 10px;
+    padding: 10px 15px;
+    margin-top: 30px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+
+  .accordion-header:hover {
+    background: #d3f0ee;
+  }
+
+  .accordion-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: #056a67;
+  }
+
+  .accordion-icon {
+    margin-left: auto;
+    font-size: 1.5rem;
+    color: #056a67;
+    font-weight: bold;
+  }
+
+  .accordion-body {
+    display: none;
+    width: 50%;
+    padding: 15px;
+    margin-top: 5px;
+    border-left: 4px solid #056a67;
+    border-radius: 8px;
+    background: #c1ebe954; /* expanded area background */
+  }
+
+  /* When header is active */
+  .accordion-header.active {
+    background: #33d4cf;;
+  }
+  .accordion-header.active .accordion-icon {
+    /* transform: rotate(45deg); */
+  }
+
+  .accordion-header {
+    /* margin-bottom: 30px; */
+}
+</style>
+<style>
+  .input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* space between $ and input */
+  }
+
+  .currency-symbol {
+    font-weight: 600;
+    color: #056a67;
+  }
+</style>
+
+
 <body class="page-application">
   <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
@@ -874,8 +942,8 @@ use core\View as View;
                             <label class="bold">Living arrangements
 
                             </label>
-                            <div class="option-group" style=" display: flex !important; gap: 0px; flex-direction: column;margin-bottom: 5px;">
-                              <select id="living_arrangements" name="living_arrangements" style="background: #c9fffd; border: #056a67 1px solid; width: 27%;" class="form-control required title-select">
+                            <div class="option-group" >
+                              <select id="living_arrangements" name="living_arrangements"  class="form-control required title-select">
                                 <option value="I own my home with a mortgage">I own my home with a mortgage</option>
                                 <option value="I own my home outright">I own my home outright</option>
                                 <option value="I am renting">I am renting</option>
@@ -883,8 +951,6 @@ use core\View as View;
                                 <option value="Other">Other</option>
                               </select>
                             </div>
-
-
                           </div>
                         </div>
                         <div class="row mt-3">
@@ -895,8 +961,21 @@ use core\View as View;
 
                         </div>
 
-
                         <div class="row mt-3">
+                          <div class="form-group col-md-12">
+                            <label class="bold">Postal address is the same?</label>
+                            <div class="option-group">
+                              <input class="option" type="radio" id="Yes" name="postal_address_same" value="Yes" checked required>
+                              <label class="option" for="Yes" style="float:left;margin-right: <?php echo $marginright; ?>;">Yes</label>
+                              <input class="option" type="radio" id="No" name="postal_address_same" value="No">
+                              <label class="option" for="No" style="float:left;margin-right: <?php echo $marginright; ?>;">No</label>
+                            </div>
+
+                          </div>
+                        </div>
+                        
+                      
+                       <!--  <div class="row mt-3">
                           <div class="form-group col-md-12">
                             <label class="bold">Postal address is the same? </label>
                             <div class="option-group">
@@ -906,9 +985,9 @@ use core\View as View;
                               <label for="No" style="float:left;margin-right: <?php echo $marginright; ?>;">No</label>
                             </div>
                           </div>
-                        </div>
+                        </div> -->
 
-                        <div class="row mt-3 hide" id="postalAddressRow">
+                        <div class="row mt-3 hide" id="postalAddressRow"> 
                           <div class="form-group col-md-6">
                             <label for="postal_address">Postal address <span class="text-danger">*</span></label>
                             <input id="postal_address" name="postal_address" type="text" maxlength="40" class="form-control required">
@@ -937,16 +1016,16 @@ use core\View as View;
                           <div class="col-md-12">
                             <div class="row">
                               <div class="form-group col-md-4">
-                                <label class="bold" for="first_name">First Name </label>
+                                <label class="bold" for="first_name">First Name <span class="text-danger">*</span></label>
                                 <input id="first_name" name="first_name" type="text" maxlength="40" class="form-control required">
                               </div>
                               <div class="form-group col-md-4">
                                 <label class="bold" for="middle_name">Middle Name </label>
-                                <input id="middle_name" name="middle_name" type="text" maxlength="40" class="form-control required">
+                                <input id="middle_name" name="middle_name" type="text" maxlength="40" class="form-control">
                               </div>
 
                               <div class="form-group col-md-4">
-                                <label class="bold" for="last_name">Last Name </label>
+                                <label class="bold" for="last_name">Last Name <span class="text-danger">*</span></label>
                                 <input id="last_name" name="last_name" type="text" maxlength="40" class="form-control required">
                               </div>
                             </div>
@@ -958,11 +1037,10 @@ use core\View as View;
 
                         <div class="row mt-3">
                           <div class="form-group col-md-12">
-                            <label class="bold">State issued in
-
-                            </label>
+                            <label class="bold">State issued in <span class="text-danger">*</span></label>
                             <div class="option-group" style=" display: flex !important; gap: 0px; flex-direction: column;margin-bottom: 5px;">
-                              <select id="living_arrangements" name="living_arrangements" style="background: #c9fffd; border: #056a67 1px solid; width: 27%;" class="form-control required title-select">
+                              <select id="state_issued_in" name="state_issued_in"  
+                              class="form-control required title-select">
                                 <option value="Australian Capital Territory">Australian Capital Territory</option>
                                 <option value="New South Wales">New South Wales</option>
                                 <option value="I am renting">Northern Territory</option>
@@ -982,12 +1060,12 @@ use core\View as View;
                           <div class="col-md-12">
                             <div class="row">
                               <div class="form-group col-md-4">
-                                <label class="bold" for="driving_licence">Driver licence number </label>
-                                <input id="driving_licence" name="driving_licence" type="text" maxlength="40" class="form-control required">
+                                <label class="bold" for="driving_licence">Driver licence number <span class="text-danger">*</span></label>
+                                <input id="driving_licence" name="driving_licence" type="text" maxlength="10" class="form-control required">
                               </div>
                               <div class="form-group col-md-4">
-                                <label class="bold" for="middle_name">Card number </label>
-                                <input id="middle_name" name="middle_name" type="text" maxlength="40" class="form-control required">
+                                <label class="bold" for="card_number">Card number <span class="text-danger">*</span></label>
+                                <input id="card_number" name="card_number" type="text" maxlength="10" class="form-control required">
                               </div>
 
 
@@ -997,8 +1075,8 @@ use core\View as View;
 
                         <div class="row mt-3 " id="">
                           <div class="form-group col-md-6">
-                            <label for="postal_address">Expiry date <span class="text-danger">*</span></label>
-                            <input id="expiry_date" name="expiry_date" type="date" maxlength="40" class="form-control required">
+                            <label for="expiry_date">Expiry date <span class="text-danger">*</span></label>
+                            <input id="expiry_date" name="expiry_date" type="date" maxlength="10" class="form-control required">
                           </div>
                         </div>
 
@@ -1006,12 +1084,33 @@ use core\View as View;
                           <div class="form-group col-md-12">
                             <label class="bold">Legal name has ever changed? </label>
                             <div class="option-group">
-                              <input class="option" type="radio" id="legal_Yes" name="legal_name_changed" value="legal_Yes" required>
-                              <label for="legal_Yes" style="float:left;margin-right: <?php echo $marginright; ?>;">Yes</label>
+                              <input class="option" type="radio" id="legal_Yes" name="legal_name_changed" value="legal_Yes" >
+                              <label class="option" for="legal_Yes" style="float:left;margin-right: <?php echo $marginright; ?>;">Yes</label>
                               <input class="option" type="radio" id="legal_No" name="legal_name_changed" value="legal_No" checked>
-                              <label for="legal_No" style="float:left;margin-right: <?php echo $marginright; ?>;">No</label>
+                              <label class="option" for="legal_No" style="float:left;margin-right: <?php echo $marginright; ?>;">No</label>
                             </div>
 
+                          </div>
+                        </div>
+                        <div class="row mt-3 hide" id="legal_previous_name">
+                          <div class="col-md-12">
+                            <label class="bold" for="first_name">Enter a previous name </label>
+                            <div class="row">
+                              <div class="form-group col-md-4">
+                                <label class="bold" for="previous_first_name">First Name <span class="text-danger">*</span></label>
+
+                                <input id="previous_first_name" name="previous_first_name" type="text" maxlength="40" class="form-control required">
+                              </div>
+                              <div class="form-group col-md-4">
+                                <label class="bold" for="previous_middle_name">Middle Name </label>
+                                <input id="previous_middle_name" name="previous_middle_name" type="text" maxlength="40" class="form-control">
+                              </div>
+
+                              <div class="form-group col-md-4">
+                                <label class="bold" for="previous_last_name">Last Name<span class="text-danger">*</span> </label>
+                                <input id="previous_last_name" name="previous_last_name" type="text" maxlength="40" class="form-control required">
+                              </div>
+                            </div>
                           </div>
                         </div>
 
@@ -1019,38 +1118,18 @@ use core\View as View;
                           <div class="form-group col-md-12">
                             <label class="bold">Residency status </label>
                             <div class="option-group">
-                              <input class="option" type="radio" id="australian_citizen" name="residency_status" value="australian_citizen" required>
-                              <label for="australian_citizen" style="float:left;margin-right: <?php echo $marginright; ?>;">Australian citizen</label>
-                              <input class="option" type="radio" id="permanent_resident" name="residency_status" value="permanent_resident" checked>
-                              <label for="permanent_resident" style="float:left;margin-right: <?php echo $marginright; ?>;">Permanent Resident</label>
-                              <input class="option" type="radio" id="temporary_resident" name="residency_status" value="temporary_resident" checked>
-                              <label for="temporary_resident" style="float:left;margin-right: <?php echo $marginright; ?>;">Temporary resident</label>
+                              <input class="option" type="radio" id="australian_citizen" name="residency_status" value="australian_citizen" checked>
+                              <label class="option" for="australian_citizen" style="float:left;margin-right: <?php echo $marginright; ?>;">Australian citizen</label>
+                              <input class="option" type="radio" id="permanent_resident" name="residency_status" value="permanent_resident">
+                              <label class="option" for="permanent_resident" style="float:left;margin-right: <?php echo $marginright; ?>;">Permanent Resident</label>
+                              <input class="option" type="radio" id="temporary_resident" name="residency_status" value="temporary_resident">
+                              <label class="option" for="temporary_resident" style="float:left;margin-right: <?php echo $marginright; ?>;">Temporary resident</label>
                             </div>
 
                           </div>
                         </div>
 
-                        <div class="row mt-3 hide" id="legal_previous_name">
-                          <div class="col-md-12">
-                            <label class="bold" for="first_name">Enter a previous name </label>
-                            <div class="row">
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="previous_first_name">First Name </label>
-
-                                <input id="previous_first_name" name="previous_first_name" type="text" maxlength="40" class="form-control required">
-                              </div>
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="previous_middle_name">Middle Name </label>
-                                <input id="previous_middle_name" name="previous_middle_name" type="text" maxlength="40" class="form-control required">
-                              </div>
-
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="previous_last_name">Last Name </label>
-                                <input id="previous_last_name" name="previous_last_name" type="text" maxlength="40" class="form-control required">
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        
 
 
                         <div class="row mt-3 " id="">
@@ -1067,6 +1146,108 @@ use core\View as View;
 
                       </section>
 
+                      <h3>Assets</h3>
+                      <section id="assets_details">
+
+                      <div style="font-weight:600; font-size:1.5rem; color:#056a67; display:flex; align-items:center; gap:8px;">
+                          <img src="http://localhost:8081/assets/images/car.webp"
+                            alt=""
+                            width="32" height="32">
+                          <span id="personal-details-heading">Assets</span>
+                        </div>
+
+
+
+                        <!-- Accordion Header 1 -->
+                        <div class="accordion-header" data-target=".assets_accordian">
+                          <div class="accordion-title">
+                            <img src="http://localhost:8081/assets/images/moneybag.png" alt="Car Icon" width="32" height="32">
+                            <span>Savings, shares & superannuation</span>
+                            <span class="accordion-icon">+</span>
+                          </div>
+                        </div>
+
+                        <!-- Accordion Body 1 -->
+                        <div class="assets_accordian accordion-body">
+                          <!-- <h2></h2> -->
+
+                          <div class="row mt-3">
+                            <div class="form-group col-md-6 dollar-field">
+                              <label for="total_savings">Total savings</label>
+                              <div class="input-wrapper">
+                              <span class="currency-symbol">$</span><input id="total_savings" name="total_savings" type="number" maxlength="40" class="form-control">
+                            </div>
+                            </div>
+                          </div>
+
+                          <div class="row mt-3">
+                            <div class="form-group col-md-6 dollar-field">
+                              <label for="total_shares">Total shares</label>
+                              <div class="input-wrapper">
+                              <span class="currency-symbol">$</span><input id="total_shares" name="total_shares" type="number" maxlength="40" class="form-control">
+                            </div>
+                            </div>
+                          </div>
+
+                          <div class="row mt-3">
+                            <div class="form-group col-md-6 dollar-field">
+                              <label for="superannuation">Total superannuation <span class="text-danger">*</span></label>
+                              <div class="input-wrapper">
+                              <span class="currency-symbol">$</span><input id="superannuation" name="superannuation" type="number" maxlength="40" class="form-control required">
+                            </div>
+                            </div>
+                          </div>
+
+                          <div class="row mt-3">
+                            <div class="form-group col-md-6">
+                              <label for="primary_superannuation">Primary superannuation institution</label>
+                              <input id="primary_superannuation" name="primary_superannuation" type="text" maxlength="40" class="form-control required">
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Accordion Header 2 -->
+                        <div class="accordion-header" data-target=".properties_accordian">
+                          <div class="accordion-title">
+                            <img src="http://localhost:8081/assets/images/house.png" alt="House Icon" width="32" height="32">
+                            <span>Properties</span>
+                            <span class="accordion-icon">+</span>
+                          </div>
+                        </div>
+
+                        <!-- Accordion Body 2 -->
+                        <div class="properties_accordian accordion-body">
+                          <div class="row mt-3">
+                            <div class="form-group col-md-6">
+                              <label>Address of a property you own</label>
+                              <input type="text" value="123 A'Beckett Street Narromine NSW 2821" readonly class="form-control">
+                            </div>
+                          </div>
+
+                          <div class="row mt-3">
+                            <div class="form-group col-md-6">
+                              <label>Estimated property value</label>
+                              <input type="text" value="$430,000" readonly class="form-control" />
+                            </div>
+                          </div>
+
+                          <div class="row mt-3">
+                            <div class="form-group col-md-6">
+                              <label>Intended property usage <span class="text-danger">*</span></label>
+                              <input type="text" value="Owner occupied" maxlength="40" class="form-control required" />
+                            </div>
+                          </div>
+
+                          <div class="row mt-3">
+                            <div class="form-group col-md-6">
+                              <label>What is your share of ownership?</label>
+                              <input id="share_ownership" name="share_ownership" value="100" type="text" maxlength="40" class="form-control required">%
+                            </div>
+                          </div>
+                        </div>
+
+                      </section>
+                      
                       <!-- Step 4: Your Loan -->
                       <h3>Your Finances</h3>
                       <section id="your-loan">
@@ -1288,7 +1469,24 @@ use core\View as View;
 
     });
   </script>
+<script>
+  $(document).ready(function () {
+    $(".accordion-header").click(function () {
+      const target = $(this).data("target");
+      const body = $(target);
 
+      // Close other accordions
+      $(".accordion-body").not(body).slideUp();
+      $(".accordion-header").not(this).removeClass("active").find(".accordion-icon").text("+");
+
+      // Toggle current accordion
+      $(this).toggleClass("active");
+      body.slideToggle();
+      const icon = $(this).find(".accordion-icon");
+      icon.text(icon.text() === "+" ? "−" : "+");
+    });
+  });
+</script>
 </body>
 
 </html>

@@ -26,13 +26,95 @@
       phone_number: {
         required: true,
         nineDigitNumber: true
-      }           
+      },
+      current_residential_address: { 
+        required: true,
+      },
+      move_in_date: {
+        required: true,
+      },
+      postal_address: {
+        required: true,
+      },
+      first_name: {
+        required: true,
+      },
+      last_name: {
+        required: true,
+      },
+      state_issued_in: {
+        required: true,
+      },
+      driving_licence: {
+        required: true,
+        minlength: 6,
+        maxlength: 10
+      },
+      card_number: {
+        required: true,
+        minlength: 6,
+        maxlength: 10
+      },
+      expiry_date: {
+        required: true,
+      },
+      previous_first_name: {
+        required: true,
+      },
+      previous_last_name: {
+        required: true,
+      },
+      date_of_birth: {
+        required: true,
+      }
+
+
     },
     messages: {
       phone_number: {
         required: "Phone number is required",
         nineDigitNumber: "Please enter exactly 9 digits"
-      }    
+      },
+      current_residential_address: {
+        required: "Residential address is required"
+      },
+      move_in_date: {
+        required: "Move in date is required"
+      },
+      postal_address: {
+        required: "Postal address is required"
+      },
+      first_name: {
+        required: "First name is required"
+      },
+      last_name: {
+        required: "Last name is required"
+      },
+      state_issued_in: {
+        required: "select a state of issue"
+      },
+      driving_licence: {
+        required: "Driver licence number is required",
+        minlength: "Licence number must be at least 6 characters",
+        maxlength: "Licence number cannot exceed 10 characters"
+      },
+      card_number: {
+        required: "Card number is required",
+        minlength: "Card number must be at least 6 characters",
+        maxlength: "Card number cannot exceed 10 characters"
+      },
+      expiry_date: {
+        required: "Expiry Date is required"
+      },
+      previous_first_name: {
+        required: "First name is required"
+      },
+      previous_last_name: {
+        required: "Last name is required"
+      },
+      date_of_birth: {
+        required: "Date of birth is required"
+      }
     }
 
   });
