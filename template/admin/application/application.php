@@ -771,6 +771,172 @@ use core\View as View;
     font-weight: 600;
     color: #056a67;
   }
+
+  .add-address-button {
+  color: #056a67;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.address-form {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #f8f9fa;
+  width: 50%;
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.close-address {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #999;
+  cursor: pointer;
+}
+
+.close-address:hover {
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+/* add-address-button */
+.add-address-button {
+  color: #056a67;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.address-form {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #f8f9fa;
+  width: 50%;
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.close-address {
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  color: #999;
+  cursor: pointer;
+}
+
+.close-address:hover {
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+
+</style>
+<style>
+  .address-form {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px;
+    width: 50%;
+    position: relative;
+  }
+
+  .address-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .close-address {
+    background: none;
+    border: none;
+    font-size: 22px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+  }
+
+  .close-address:hover {
+    color: #333;
+  }
+
+  .add-address-button {
+    display: inline-block;
+    margin-top: 10px;
+    color: #056a67;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .add-address-button:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<style>
+.address-form {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+  width: 50%;
+  position: relative;
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-address {
+  background: none;
+  border: none;
+  font-size: 22px;
+  font-weight: bold;
+  color: #999;
+  cursor: pointer;
+}
+
+.close-address:hover {
+  color: #333;
+}
+
+.add-address-button {
+  display: inline-block;
+  margin-top: 10px;
+  color: #056a67;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.add-address-button:hover {
+  text-decoration: underline;
+}
 </style>
 
 
@@ -935,8 +1101,6 @@ use core\View as View;
 
                         </div>
 
-
-
                         <div class="row mt-3">
                           <div class="form-group col-md-12">
                             <label class="bold">Living arrangements
@@ -974,31 +1138,54 @@ use core\View as View;
                           </div>
                         </div>
                         
-                      
-                       <!--  <div class="row mt-3">
-                          <div class="form-group col-md-12">
-                            <label class="bold">Postal address is the same? </label>
-                            <div class="option-group">
-                              <input class="option" type="radio" id="Yes" name="postal_address_same" value="Yes" checked required>
-                              <label for="Yes" style="float:left;margin-right: <?php echo $marginright; ?>;">Yes</label>
-                              <input class="option" type="radio" id="No" name="postal_address_same" value="No">
-                              <label for="No" style="float:left;margin-right: <?php echo $marginright; ?>;">No</label>
-                            </div>
-                          </div>
-                        </div> -->
-
                         <div class="row mt-3 hide" id="postalAddressRow"> 
                           <div class="form-group col-md-6">
                             <label for="postal_address">Postal address <span class="text-danger">*</span></label>
                             <input id="postal_address" name="postal_address" type="text" maxlength="40" class="form-control required">
                           </div>
                         </div>
+                        
 
+                        <!-- Container for all address forms -->
+                        <div id="address-container"></div>
 
+                        <!-- Keep template OUTSIDE the container -->
+                        <div class="address-form template" style="display:none;">
+                          <div class="form-fields">
+                            <div class="address-header">
+                              <h4>Previous residential address</h4>
+                              <button type="button" class="close-address">×</button>
+                            </div>
 
+                            <div class="row mt-3">
+                              <div class="form-group col-md-9">
+                                <label>Previous address <span class="text-danger">*</span></label>
+                                <input type="text" name="previous_address[]" maxlength="40" class="form-control required">
+                              </div>
+                            </div>
 
+                            <div class="row mt-3">
+                              <div class="form-group col-md-9">
+                                <label>Period lived there</label>
+                                <div class="d-flex align-items-center gap-2">
+                                  <div class="col-md-5 p-0">
+                                    <label><small>From date (Month/Year)</small></label>
+                                    <input type="month" name="period_lived_from_date[]" class="form-control required">
+                                  </div>
+                                  <div>-</div>
+                                  <div class="col-md-5 p-0">
+                                    <label><small>To date (Month/Year)</small></label>
+                                    <input type="month" name="period_lived_to_date[]" class="form-control required">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
 
-
+                        <div>
+                          <span class="add-address-button">+ Add address</span>
+                        </div>
                       </section>
 
                       <!-- Step 3: Your Finances -->
@@ -1234,14 +1421,16 @@ use core\View as View;
                           <div class="row mt-3">
                             <div class="form-group col-md-6">
                               <label>Intended property usage <span class="text-danger">*</span></label>
-                              <input type="text" value="Owner occupied" maxlength="40" class="form-control required" />
+                              <input type="text" value="Owner occupied" readonly maxlength="40" class="form-control required" />
                             </div>
                           </div>
 
                           <div class="row mt-3">
                             <div class="form-group col-md-6">
                               <label>What is your share of ownership?</label>
-                              <input id="share_ownership" name="share_ownership" value="100" type="text" maxlength="40" class="form-control required">%
+                              <div class="input-wrapper">
+                                <input id="share_ownership" name="share_ownership" value="100" type="number" maxlength="40" class="form-control required"><span class="currency-symbol">%</span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1486,6 +1675,36 @@ use core\View as View;
       icon.text(icon.text() === "+" ? "−" : "+");
     });
   });
+
+$(document).ready(function () {
+  $(".add-address-button").click(function () {
+    $(".address-form").slideDown(); // show with animation
+  });
+
+  $(".close-address").click(function () {
+    $(".address-form").slideUp(); // hide with animation
+  });
+});
+
+
+
+
+</script>
+
+<script>
+$(document).ready(function () {
+  // When clicking "+ Add address"
+ $(".add-address-button").on("click", function () {
+    const newAddress = $(".address-form.template").clone();
+    newAddress.removeClass("template").show(); // use show(), not slideDown()
+    $("#address-container").append(newAddress);
+});
+
+  // Close button inside cloned form
+  $(document).on("click", ".close-address", function () {
+    $(this).closest(".address-form").remove();
+  });
+});
 </script>
 </body>
 
