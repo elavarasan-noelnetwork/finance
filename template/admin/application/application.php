@@ -16,6 +16,11 @@ use core\View as View;
 
 
 <style>
+
+input {
+  letter-spacing: 0.6px;
+}
+
   ::-webkit-scrollbar {
     width: 0px;
     background: transparent;
@@ -752,151 +757,22 @@ use core\View as View;
   .accordion-header.active {
     background: #33d4cf;;
   }
-  .accordion-header.active .accordion-icon {
-    /* transform: rotate(45deg); */
-  }
 
-  .accordion-header {
-    /* margin-bottom: 30px; */
-}
 </style>
 <style>
-  .input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px; /* space between $ and input */
-  }
-
-  .currency-symbol {
-    font-weight: 600;
-    color: #056a67;
-  }
-
-  .add-address-button {
-  color: #056a67;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.address-form {
-  margin-top: 15px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  background-color: #f8f9fa;
-  width: 50%;
-}
-
-.address-header {
+/* ===== Input field wrapper (for $ symbol etc.) ===== */
+.input-wrapper {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  gap: 8px; /* space between $ and input */
 }
 
-.close-address {
-  background: none;
-  border: none;
-  font-size: 20px;
-  font-weight: bold;
-  color: #999;
-  cursor: pointer;
-}
-
-.close-address:hover {
-  color: #333;
-}
-
-.form-group {
-  margin-bottom: 10px;
-}
-
-/* add-address-button */
-.add-address-button {
-  color: #056a67;
+.currency-symbol {
   font-weight: 600;
-  cursor: pointer;
+  color: #056a67;
 }
 
-.address-form {
-  margin-top: 15px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  background-color: #f8f9fa;
-  width: 50%;
-}
-
-.address-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.close-address {
-  background: none;
-  border: none;
-  font-size: 20px;
-  font-weight: bold;
-  color: #999;
-  cursor: pointer;
-}
-
-.close-address:hover {
-  color: #333;
-}
-
-.form-group {
-  margin-bottom: 10px;
-}
-
-
-</style>
-<style>
-  .address-form {
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 15px;
-    width: 50%;
-    position: relative;
-  }
-
-  .address-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .close-address {
-    background: none;
-    border: none;
-    font-size: 22px;
-    font-weight: bold;
-    color: #999;
-    cursor: pointer;
-  }
-
-  .close-address:hover {
-    color: #333;
-  }
-
-  .add-address-button {
-    display: inline-block;
-    margin-top: 10px;
-    color: #056a67;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  .add-address-button:hover {
-    text-decoration: underline;
-  }
-</style>
-
-<style>
+/* ===== Address Form Section ===== */
 .address-form {
   background: #f8f9fa;
   border: 1px solid #ddd;
@@ -926,19 +802,127 @@ use core\View as View;
   color: #333;
 }
 
+/* ===== Add Address Button ===== */
 .add-address-button {
   display: inline-block;
   margin-top: 10px;
   color: #056a67;
   font-weight: 600;
   cursor: pointer;
+  padding: 6px 12px;
+  border: 1px solid #056a67;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
 }
 
 .add-address-button:hover {
-  text-decoration: underline;
+  background-color: #056a67;
+  color: #fff;
+}
+
+
+/* ===== Address Form Section ===== */
+.property-form {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+  width: 90%;
+  position: relative;
+}
+
+.property-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-property {
+  background: none;
+  border: none;
+  font-size: 22px;
+  font-weight: bold;
+  color: #999;
+  cursor: pointer;
+}
+
+.close-property:hover {
+  color: #333;
+}
+
+/* ===== Add Address Button ===== */
+.add-property-button {
+  display: inline-block;
+  margin-top: 10px;
+  color: #056a67;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+  border: 1px solid #056a67;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.add-property-button:hover {
+  background-color: #056a67;
+  color: #fff;
+}
+
+
+.toggle-switch .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f3e7e7;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 34px;
+    border: 1px solid #d1c8c8;
+}
+
+.toggle-contents{
+  font-weight: 500; 
+  font-size: 1rem; 
+  color: #056a67; 
+  display: flex; 
+  align-items: center; 
+  padding: 20px 0;
+  gap: 188px;    
+  border-bottom: 1px solid #d6eaf3; 
+  margin-bottom: 20px;
+}
+.special-text{
+color: #056a67;
+}
+
+.wizard > .steps .done a {
+    background-color: #33d4cf !important;
+    color: #434a54 !important;
+    cursor: pointer !important;
 }
 </style>
+<style>
+.add-address-button {
+  display: inline-block;
+  color: #29afab;
+  border: 2px solid #29afab;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
 
+.add-address-button:hover {
+  background-color: #29afab;
+  color: white;
+}
+</style>
 
 <body class="page-application">
   <div class="container-scroller">
@@ -1151,7 +1135,7 @@ use core\View as View;
                         <!-- Where new addresses will appear -->
                         <div id="address-container"></div>
                         <div>
-                          <span class="add-address-button" style="cursor:pointer; color:blue;">+ Add address</span>
+                          <span class="add-address-button" style="cursor:pointer;">+ Add address</span>
                         </div>
                         <!-- Template (stay hidden and NEVER removed) -->
                         <div class="address-form template" style="display:none;">
@@ -1173,12 +1157,12 @@ use core\View as View;
                                 <label>Period lived there</label>
                                 <div class="d-flex align-items-center gap-2">
                                   <div class="col-md-5 p-0">
-                                    <label style="font-weight: normal;"><small>From date (Month/Year)</small></label>
+                                    <label style="font-weight: normal;"> <span class="label-subtext">From date (Month/Year)</span></label>
                                     <input type="month" name="period_lived_from_date[]" class="form-control required">
                                   </div>
                                   <div class="" style="margin-top:30px;"><b>-</b></div>
                                   <div class="col-md-5 p-0">
-                                    <label style="font-weight: normal;"><small>To date (Month/Year)</small></label>
+                                    <label style="font-weight: normal;"> <span class="label-subtext">To date (Month/Year)</span></label>
                                     <input type="month" name="period_lived_to_date[]" class="form-control required">
                                   </div>
                                 </div>
@@ -1199,71 +1183,101 @@ use core\View as View;
                           <span id="personal-details-heading">ID details</span>
                         </div>
 
+                        <div class="toggle-contents">
+                           <label style="margin: 0;">Australian Driver Licence</label>
+                          <div style="display: flex; align-items: center; gap: 10px; font-size:15px;">
+                           <span id="personal-details-heading">I don’t have this</span>
+                            <label class="toggle-switch">
+                              <input class="dont_have_licence" type="checkbox" name="dont_have_licence" id="dont_have_licence" />
+                              <span class="toggle-slider round"></span>
+                            </label>
+                          </div>
+                        </div>
+
+                        
                         <div class="row mt-3">
                           <div class="col-md-12">
+                            <label class="bold special-text" for="">Name exactly as displayed on ID </label>
                             <div class="row">
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="first_name">First Name <span class="text-danger">*</span></label>
-                                <input id="first_name" name="first_name" type="text" maxlength="40" class="form-control required">
+                              <div class="form-group col-md-12">
+                                <!-- <label class="bold" for="first_name">First Name <span class="text-danger">*</span></label> -->
+                                <input id="first_name" name="first_name" type="text" maxlength="40" class="form-control required" placeholder="First Name">
                               </div>
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="middle_name">Middle Name </label>
-                                <input id="middle_name" name="middle_name" type="text" maxlength="40" class="form-control">
+                              <div class="form-group col-md-12">
+                                <!-- <label class="bold" for="middle_name">Middle Name </label> -->
+                                <input id="middle_name" name="middle_name" type="text" maxlength="40" class="form-control" placeholder="Middle Name">
                               </div>
 
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="last_name">Last Name <span class="text-danger">*</span></label>
-                                <input id="last_name" name="last_name" type="text" maxlength="40" class="form-control required">
+                              <div class="form-group col-md-12">
+                                <!-- <label class="bold" for="last_name">Last Name <span class="text-danger">*</span></label> -->
+                                <input id="last_name" name="last_name" type="text" maxlength="40" class="form-control required" placeholder="Last Name">
                               </div>
                             </div>
                           </div>
                         </div>
-
-                        <div class="row mt-3">
-                          <div class="form-group col-md-12">
-                            <label class="bold">State issued in <span class="text-danger">*</span></label>
-                            <div class="option-group" style=" display: flex !important; gap: 0px; flex-direction: column;margin-bottom: 5px;">
-                              <select id="state_issued_in" name="state_issued_in"  
-                              class="form-control required title-select">
-                                <option value="Australian Capital Territory">Australian Capital Territory</option>
-                                <option value="New South Wales">New South Wales</option>
-                                <option value="I am renting">Northern Territory</option>
-                                <option value="Queensland">Queensland</option>
-                                <option value="South Australia">South Australia</option>
-                                <option value="Tasmania">Tasmania</option>
-                                <option value="Victoria">Victoria</option>
-                                <option value="Western Australia">Western Australia</option>
-                              </select>
-                            </div>
-
-
-                          </div>
-                        </div>
-
-                        <div class="row mt-3">
-                          <div class="col-md-12">
-                            <div class="row">
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="driving_licence">Driver licence number <span class="text-danger">*</span></label>
-                                <input id="driving_licence" name="driving_licence" type="text" maxlength="10" class="form-control required">
-                              </div>
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="card_number">Card number <span class="text-danger">*</span></label>
-                                <input id="card_number" name="card_number" type="text" maxlength="10" class="form-control required">
+                        <div class="having_driving_licence">
+                          <div class="row mt-3">
+                            <div class="form-group col-md-12">
+                              <label class="bold">State issued in <span class="text-danger">*</span></label>
+                              <div class="option-group" style=" display: flex !important; gap: 0px; flex-direction: column;margin-bottom: 5px;">
+                                <select id="state_issued_in" name="state_issued_in"  
+                                class="form-control required title-select">
+                                  <option value="Australian Capital Territory">Australian Capital Territory</option>
+                                  <option value="New South Wales">New South Wales</option>
+                                  <option value="I am renting">Northern Territory</option>
+                                  <option value="Queensland">Queensland</option>
+                                  <option value="South Australia">South Australia</option>
+                                  <option value="Tasmania">Tasmania</option>
+                                  <option value="Victoria">Victoria</option>
+                                  <option value="Western Australia">Western Australia</option>
+                                </select>
                               </div>
 
 
                             </div>
                           </div>
-                        </div>
 
-                        <div class="row mt-3 " id="">
-                          <div class="form-group col-md-6">
-                            <label for="expiry_date">Expiry date <span class="text-danger">*</span></label>
-                            <input id="expiry_date" name="expiry_date" type="date" maxlength="10" class="form-control required">
+                          <div class="row mt-3">
+                            <div class="col-md-12">
+                              <div class="row">
+                                <div class="form-group col-md-12">
+                                  <label class="bold" for="driving_licence">Driver licence number <span class="text-danger">*</span></label>
+                                  <input id="driving_licence" name="driving_licence" type="text" maxlength="10" class="form-control required">
+                                </div>
+                                <div class="form-group col-md-12">
+                                  <label class="bold" for="card_number">Card number <span class="text-danger">*</span></label>
+                                  <input id="card_number" name="card_number" type="text" maxlength="10" class="form-control required">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="row mt-3 " id="">
+                            <div class="form-group col-md-6">
+                              <label for="expiry_date">Expiry date <span class="text-danger">*</span></label>
+                              <input id="expiry_date" name="expiry_date" type="date" maxlength="10" class="form-control required">
+                            </div>
                           </div>
                         </div>
+                       <!--  <div class="Not_having_driving_licence">
+                          <div class="row mt-3">
+                            <div class="col-md-12">
+                               <label class="bold special-text" for="">Legal Name</label>
+                              <div class="row">
+                                <div class="form-group col-md-12">
+                                  <input id="first_name" name="first_name" type="text" maxlength="40" class="form-control required" placeholder="First Name" >
+                                </div>
+                                <div class="form-group col-md-12">
+                                  <input id="middle_name" name="middle_name" type="text" maxlength="40" class="form-control" placeholder="Middle Name" >
+                                </div>
 
+                                <div class="form-group col-md-12">
+                                  <input id="last_name" name="last_name" type="text" maxlength="40" class="form-control required" placeholder="Last Name">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div> -->
                         <div class="row mt-3">
                           <div class="form-group col-md-12">
                             <label class="bold">Legal name has ever changed? </label>
@@ -1278,21 +1292,20 @@ use core\View as View;
                         </div>
                         <div class="row mt-3 hide" id="legal_previous_name">
                           <div class="col-md-12">
-                            <label class="bold" for="first_name">Enter a previous name </label>
+                            <label class="bold special-text" for="first_name">Enter a previous name </label>
                             <div class="row">
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="previous_first_name">First Name <span class="text-danger">*</span></label>
-
-                                <input id="previous_first_name" name="previous_first_name" type="text" maxlength="40" class="form-control required">
+                              <div class="form-group col-md-12">
+                               <!--  <label class="bold" for="previous_first_name"> <span class="text-danger">*</span></label> -->
+                                <input id="previous_first_name" name="previous_first_name" type="text" maxlength="40" class="form-control required" placeholder="First Name" />
                               </div>
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="previous_middle_name">Middle Name </label>
-                                <input id="previous_middle_name" name="previous_middle_name" type="text" maxlength="40" class="form-control">
+                              <div class="form-group col-md-12">
+                                <!-- <label class="bold" for="previous_middle_name">Middle Name </label> -->
+                                <input id="previous_middle_name" name="previous_middle_name" type="text" maxlength="40" class="form-control" placeholder="Middle Name">
                               </div>
 
-                              <div class="form-group col-md-4">
-                                <label class="bold" for="previous_last_name">Last Name<span class="text-danger">*</span> </label>
-                                <input id="previous_last_name" name="previous_last_name" type="text" maxlength="40" class="form-control required">
+                              <div class="form-group col-md-12">
+                                <!-- <label class="bold" for="previous_last_name">Last Name<span class="text-danger">*</span> </label> -->
+                                <input id="previous_last_name" name="previous_last_name" type="text" maxlength="40" class="form-control required" placeholder="Last Name">
                               </div>
                             </div>
                           </div>
@@ -1312,28 +1325,18 @@ use core\View as View;
 
                           </div>
                         </div>
-
-                        
-
-
                         <div class="row mt-3 " id="">
                           <div class="form-group col-md-6">
                             <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
                             <input id="date_of_birth" name="date_of_birth" type="date" maxlength="40" class="form-control required">
                           </div>
                         </div>
-
-
-
-
-
-
-                      </section>
+                       </section>
 
                       <h3>Assets</h3>
                       <section id="assets_details">
 
-                      <div style="font-weight:600; font-size:1.5rem; color:#056a67; display:flex; align-items:center; gap:8px;">
+                        <div style="font-weight:600; font-size:1.5rem; color:#056a67; display:flex; align-items:center; gap:8px;">
                           <img src="http://localhost:8081/assets/images/car.webp"
                             alt=""
                             width="32" height="32">
@@ -1356,30 +1359,63 @@ use core\View as View;
                           <!-- <h2></h2> -->
 
                           <div class="row mt-3">
-                            <div class="form-group col-md-6 dollar-field">
-                              <label for="total_savings">Total savings</label>
-                              <div class="input-wrapper">
-                              <span class="currency-symbol">$</span><input id="total_savings" name="total_savings" type="number" maxlength="40" class="form-control">
-                            </div>
+
+                            <div class="form-group col-md-6">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text bg-primary text-white">$</span>
+                                </div>
+                                
+                                <input  type="text" id="total_savings" name="total_savings" oninput="allowonlynumbers(this)" maxlength="15" class="form-control" aria-label="Amount (to the nearest dollar)">
+                                <div class="input-group-append">
+                                  <!-- <span class="input-group-text">.00</span> -->
+                                </div>
+                              </div>
                             </div>
                           </div>
 
                           <div class="row mt-3">
-                            <div class="form-group col-md-6 dollar-field">
+                            <div class="form-group col-md-6">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text bg-primary text-white">$</span>
+                                </div>
+                                <!-- <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"> -->
+                                <input id="total_shares" name="total_shares" type="text" oninput="allowonlynumbers(this)" maxlength="15"  class="form-control" />
+                                <div class="input-group-append">
+                                  <!-- <span class="input-group-text">.00</span> -->
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- <div class="form-group col-md-6 dollar-field">
                               <label for="total_shares">Total shares</label>
                               <div class="input-wrapper">
-                              <span class="currency-symbol">$</span><input id="total_shares" name="total_shares" type="number" maxlength="40" class="form-control">
+                              <span class="currency-symbol">$</span><input id="total_shares" name="total_shares" type="number" maxlength="12" class="form-control">
                             </div>
-                            </div>
+                            </div> -->
                           </div>
 
                           <div class="row mt-3">
-                            <div class="form-group col-md-6 dollar-field">
+                            <div class="form-group col-md-6">
+                              <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text bg-primary text-white">$</span>
+                                </div>
+                                <!-- <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)"> -->
+                                <input id="superannuation" name="superannuation" type="text" oninput="allowonlynumbers(this)" maxlength="15"  class="form-control required" />
+                                <div class="input-group-append">
+                                  <!-- <span class="input-group-text">.00</span> -->
+                                </div>
+                              </div>
+                            </div>
+
+                           <!--  <div class="form-group col-md-6 dollar-field">
                               <label for="superannuation">Total superannuation <span class="text-danger">*</span></label>
                               <div class="input-wrapper">
-                              <span class="currency-symbol">$</span><input id="superannuation" name="superannuation" type="number" maxlength="40" class="form-control required">
+                              <span class="currency-symbol">$</span><input id="superannuation" name="superannuation" type="number" maxlength="12" class="form-control required">
                             </div>
-                            </div>
+                            </div> -->
                           </div>
 
                           <div class="row mt-3">
@@ -1424,14 +1460,99 @@ use core\View as View;
 
                           <div class="row mt-3">
                             <div class="form-group col-md-6">
-                              <label>What is your share of ownership?</label>
-                              <div class="input-wrapper">
-                                <input id="share_ownership" name="share_ownership" value="100" type="number" maxlength="40" class="form-control required"><span class="currency-symbol">%</span>
+                              <label> What is your share of ownership?  <span class="text-danger">*</span></label>
+                              <div class="input-group">
+                                  <input id="share_ownership" name="share_ownership" oninput="updateShareOwnership(this)"  value="100" type="text" maxlength="5" class="form-control required" >
+                                  <div class="input-group-append">
+                                    <span class="input-group-text" style="background-color: #29afab;color:#fff; ">%</span>
+                                  </div>
+                                 
                               </div>
+                               <span class="whitespace-nowrap non-applicant-owns" style="font-size:13px;"></span>
                             </div>
+                          </div>
+
+                          <div id="property-container"></div>
+                          <div>
+                            <span class="add-property-button" style="cursor:pointer;">+ Add property</span>
+                          </div>
+                          <!-- Template (stay hidden and NEVER removed) -->
+                          <div class="property-form template" style="display:none;">
+                            <div class="form-fields">
+                              <div class="property-header">
+                                <h4>New Property</h4>
+                                <button type="button" class="close-property">×</button>
+                              </div>
+
+                              <div class="row mt-3">
+                                <div class="form-group col-md-9">
+                                  <label>Address of a property you own  <span class="text-danger">*</span></label>
+                                  <input type="text" name="property_address[]" maxlength="40" class="form-control required">
+                                </div>
+                              </div>
+                              <div class="row mt-3">
+                                <div class="form-group col-md-7">
+                                  <label>Estimated property value   <span class="text-danger">*</span></label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text bg-primary text-white">$</span>
+                                    </div>
+                                    <input id="estimated_property_value" name="estimated_property_value" type="text" oninput="allowonlynumbers(this)" maxlength="15"  class="form-control required" />
+                                    <div class="input-group-append">
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row mt-3">
+                                <div class="form-group col-md-12">
+                                  <label class="bold">Current property usage  </label>
+                                  <div class="option-group">
+                                    <input class="option" type="radio" id="owner_occupied"  name="owner_occupied[]" value="owner_occupied" checked>
+                                    <label class="option" for="owner_occupied" style="float:left;margin-right: <?php echo $marginright; ?>;">Owner occupied</label>
+                                    <input class="option" type="radio" id="investment"  name="owner_occupied[]" value="investment" >
+                                    <label class="option" for="investment" style="float:left;margin-right: <?php echo $marginright; ?>;">Investment</label>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row mt-3">
+                                <div class="form-group col-md-12">
+                                  <label class="bold">Rental status <br/>
+                                  <span class="label-subtext">Long term rentals are more than 6 months</span> </label>
+                                  <div class="option-group">
+                                    <input class="option" type="radio" id="long_term" name="long_term[]" value="long_term" checked>
+                                    <label class="option" for="long_term" style="float:left;margin-right: <?php echo $marginright; ?>;">Long term</label>
+
+                                    <input class="option" type="radio" id="short_term"  name="long_term[]" value="short_term" >
+                                    <label class="option" for="short_term" style="float:left;margin-right: <?php echo $marginright; ?>;">Short term</label> 
+                                    
+                                    <input class="option" type="radio" id="untenanted"  name="long_term[]" value="untenanted" >
+                                    <label class="option" for="untenanted" style="float:left;margin-right: <?php echo $marginright; ?>;">Untenanted</label>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row mt-3">
+                                <div class="form-group col-md-6">
+                                  <label> What is your share of ownership?  <span class="text-danger">*</span></label>
+                                  <div class="input-group">
+                                      <input id="share_of_ownership" name="share_of_ownership[]" oninput="allowonlynumbers(this)"  value="100" type="text" maxlength="5" class="form-control required" >
+                                      <div class="input-group-append">
+                                        <span class="input-group-text" style="background-color: #29afab;color:#fff; ">%</span>
+                                      </div>
+                                    
+                                  </div>
+                                  <!-- <span class="whitespace-nowrap non-applicant-owns" style="font-size:13px;"></span> -->
+                                </div>
+                              </div>
+
+                            </div>
+
+                              
                           </div>
                         </div>
 
+
+                        
                       </section>
                       
                       <!-- Step 4: Your Loan -->
@@ -1529,6 +1650,40 @@ use core\View as View;
   <!-- Elavarsan ---------------------------- -->
 
   <script>
+
+    function allowonlynumbers(input) {
+      // Allow only numbers and one dot
+      input.value = input.value
+        .replace(/[^0-9.]/g, '')   // Remove everything except digits and dot
+        .replace(/(\..*)\./g, '$1'); // Prevent multiple dots
+    }
+    function updateShareOwnership(input) {
+      // Allow only numbers and one dot
+      input.value = input.value
+        .replace(/[^0-9.]/g, '')   // Only digits and dot
+        .replace(/(\..*)\./g, '$1'); // Only one dot
+
+      let value = parseFloat(input.value);
+      let $span = document.querySelector('.non-applicant-owns');
+
+      if (!isNaN(value) && value <= 100) {
+        let remaining = (100 - value).toFixed(2).replace(/\.00$/, ''); // Remove .00 if not needed
+        if(remaining!=0){
+          $span.textContent = `Non-applicant owns ${remaining}%`;
+        }else{
+          $span.textContent = '';
+        }
+        
+      } else if (value > 100) {
+        input.value = 100;
+        $span.textContent = '';
+        //$span.textContent = `Non-applicant owns 0%`;
+      } else {
+        $span.textContent = '';
+      }
+    }
+
+
     const radios = document.querySelectorAll('input[name="title1"]');
     const select = document.querySelector('#title2');
     //const relationship = document.querySelector('#relationship');
@@ -1579,23 +1734,6 @@ use core\View as View;
   </script>
 
   <script>
-    /* $(document).ready(function () {
-  $('#phone_number').on('input', function () {
-    // Allow only numbers
-    this.value = this.value.replace(/[^0-9]/g, '');
-  });
-
-  $('#phone_number').on('blur', function () {
-    const phone = $(this).val().trim();
-    if (phone === '') {
-      alert('Please enter your phone number.');
-    } else if (phone.length < 8 || phone.length > 15) {
-      alert('Phone number must be between 8 and 15 digits.');
-    }
-  });
-}); */
-
-
     $(document).ready(function() {
       $('#phone_number').on('input', function() {
         let val = $(this).val().replace(/\D/g, ''); // Keep digits only
@@ -1690,6 +1828,7 @@ use core\View as View;
 
 <script>
 $(document).ready(function() {
+
   // Add new address
   $('.add-address-button').on('click', function() {
     // Always clone from the original template (not from appended copies)
@@ -1706,9 +1845,127 @@ $(document).ready(function() {
   // Close (remove) only the clicked address
   $(document).on('click', '.close-address', function() {
     $(this).closest('.address-form').remove();
+  }); 
+  
+  /* $('.add-property-button').on('click', function() {
+    // Always clone from the original template (not from appended copies)
+    let $template = $('.property-form.template').first().clone();
+
+    // Clean up and show
+    $template.removeClass('template').show();
+    $template.find('input').val(''); // clear previous values if any
+
+    // Append to container
+    $('#property-container').append($template);
   });
+
+  // Close (remove) only the clicked address
+  $(document).on('click', '.close-property', function() {
+    $(this).closest('.property-form').remove();
+  }); */
+
+
+  /*  let propertyIndex = 0;
+
+  $(".add-property-button").on("click", function () {
+    propertyIndex++;
+
+    const newForm = $(".property-form.template").clone().removeClass("template").show();
+
+    // Update radio button group names to be unique
+    newForm.find('input[type="radio"]').each(function () {
+      const oldName = $(this).attr("name");
+      const newName = oldName.replace("[]", "") + "_" + propertyIndex;
+      $(this).attr("name", newName);
+    });
+
+    // Append to container
+    $("#property-container").append(newForm);
+
+    // Handle close button
+    newForm.find(".close-property").on("click", function () {
+      newForm.remove();
+    });
+  }); */
+
+  let propertyIndex = 0;
+
+  $(".add-property-button").on("click", function () {
+    propertyIndex++;
+
+    // Clone template
+    const $newForm = $(".property-form.template")
+      .clone()
+      .removeClass("template")
+      .show();
+
+    // Update header title
+    $newForm.find(".property-header h4").text("Property #" + propertyIndex);
+
+    // Generate a unique suffix for IDs and radio names
+    const uniqueSuffix = "_prop" + propertyIndex;
+
+    // Fix all IDs and "for" labels
+    $newForm.find("[id]").each(function () {
+      const oldId = $(this).attr("id");
+      const newId = oldId + uniqueSuffix;
+      $(this).attr("id", newId);
+    });
+
+    $newForm.find("label[for]").each(function () {
+      const oldFor = $(this).attr("for");
+      const newFor = oldFor + uniqueSuffix;
+      $(this).attr("for", newFor);
+    });
+
+    // Fix radio names (make them independent)
+    $newForm.find('input[type="radio"]').each(function () {
+      let oldName = $(this).attr("name");
+      let newName = oldName.replace("[]", "") + uniqueSuffix;
+      $(this).attr("name", newName);
+    });
+
+    // Reset all text/number inputs
+    $newForm.find("input[type='text'], input[type='month']").val("");
+
+    // Append to container
+    $("#property-container").append($newForm);
+
+    // Close button handler
+    $newForm.find(".close-property").on("click", function () {
+      $newForm.fadeOut(200, function () {
+        $(this).remove();
+      });
+    });
+  });
+
+});
+
+
+</script>
+
+<script>
+$(document).ready(function() {
+
+  // Hide Not_having_driving_licence by default
+  $('.Not_having_driving_licence').hide();
+
+  // When checkbox is clicked
+  $('#dont_have_licence').on('change', function() {
+    if ($(this).is(':checked')) {
+      // Checkbox checked → hide licence fields, show non-licence fields
+      $('.having_driving_licence').hide();
+      $('.Not_having_driving_licence').show();
+    } else {
+      // Checkbox unchecked → show licence fields, hide non-licence fields
+      $('.having_driving_licence').show();
+      $('.Not_having_driving_licence').hide();
+    }
+  });
+
 });
 </script>
+
 </body>
 
 </html>
