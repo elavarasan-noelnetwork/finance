@@ -1146,10 +1146,14 @@ use core\View as View;
                         </div>
                         
 
-                        <!-- Container for all address forms -->
-                        <div id="address-container"></div>
 
-                        <!-- Keep template OUTSIDE the container -->
+
+                        <!-- Where new addresses will appear -->
+                        <div id="address-container"></div>
+                        <div>
+                          <span class="add-address-button" style="cursor:pointer; color:blue;">+ Add address</span>
+                        </div>
+                        <!-- Template (stay hidden and NEVER removed) -->
                         <div class="address-form template" style="display:none;">
                           <div class="form-fields">
                             <div class="address-header">
@@ -1169,22 +1173,18 @@ use core\View as View;
                                 <label>Period lived there</label>
                                 <div class="d-flex align-items-center gap-2">
                                   <div class="col-md-5 p-0">
-                                    <label><small>From date (Month/Year)</small></label>
+                                    <label style="font-weight: normal;"><small>From date (Month/Year)</small></label>
                                     <input type="month" name="period_lived_from_date[]" class="form-control required">
                                   </div>
-                                  <div>-</div>
+                                  <div class="" style="margin-top:30px;"><b>-</b></div>
                                   <div class="col-md-5 p-0">
-                                    <label><small>To date (Month/Year)</small></label>
+                                    <label style="font-weight: normal;"><small>To date (Month/Year)</small></label>
                                     <input type="month" name="period_lived_to_date[]" class="form-control required">
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-
-                        <div>
-                          <span class="add-address-button">+ Add address</span>
                         </div>
                       </section>
 
@@ -1218,9 +1218,6 @@ use core\View as View;
                             </div>
                           </div>
                         </div>
-
-
-
 
                         <div class="row mt-3">
                           <div class="form-group col-md-12">
@@ -1676,7 +1673,7 @@ use core\View as View;
     });
   });
 
-$(document).ready(function () {
+/* $(document).ready(function () {
   $(".add-address-button").click(function () {
     $(".address-form").slideDown(); // show with animation
   });
@@ -1684,7 +1681,7 @@ $(document).ready(function () {
   $(".close-address").click(function () {
     $(".address-form").slideUp(); // hide with animation
   });
-});
+}); */
 
 
 
@@ -1692,17 +1689,23 @@ $(document).ready(function () {
 </script>
 
 <script>
-$(document).ready(function () {
-  // When clicking "+ Add address"
- $(".add-address-button").on("click", function () {
-    const newAddress = $(".address-form.template").clone();
-    newAddress.removeClass("template").show(); // use show(), not slideDown()
-    $("#address-container").append(newAddress);
-});
+$(document).ready(function() {
+  // Add new address
+  $('.add-address-button').on('click', function() {
+    // Always clone from the original template (not from appended copies)
+    let $template = $('.address-form.template').first().clone();
 
-  // Close button inside cloned form
-  $(document).on("click", ".close-address", function () {
-    $(this).closest(".address-form").remove();
+    // Clean up and show
+    $template.removeClass('template').show();
+    $template.find('input').val(''); // clear previous values if any
+
+    // Append to container
+    $('#address-container').append($template);
+  });
+
+  // Close (remove) only the clicked address
+  $(document).on('click', '.close-address', function() {
+    $(this).closest('.address-form').remove();
   });
 });
 </script>
