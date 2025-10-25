@@ -368,7 +368,7 @@ use core\View as View;
                                                 <!-- Title -->
                                                 <div style="font-weight:600; font-size:1.5rem; margin-bottom:30px; color:#056a67; display:flex; align-items:center; gap:8px;">
                                                     <img src="<?php echo ASSETS_DIR; ?>/images/smsf.png" alt="trust" width="45" height="45" />
-                                                    Corporate Trust Details
+                                                    Corporate SMSF Details
                                                 </div>
 
                                                 <!-- Fund Name & Company Name -->

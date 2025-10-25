@@ -33,11 +33,13 @@
   <link rel="stylesheet" href="<?php echo ASSETS_DIR; ?>/css/plugins-overrides.css?v=123">
   <link rel="stylesheet" href="<?php echo ASSETS_DIR; ?>/css/responsive.css?v=123"> -->
 
-
-
-
   <!-- endinject -->
   <link rel="shortcut icon" href="<?php echo ASSETS_DIR; ?>/images/favicons/zion_favicon.png" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/avgrund/1.3.3/avgrund.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/avgrund/1.3.3/jquery.avgrund.min.js"></script>
+
 </head>
 <style>
   .add-user-btn {

@@ -364,7 +364,7 @@ class CommonController extends Controller
   {
     $formattedDate = '';
     if (!empty($dateTime)) {
-      $formattedDate = date("d-m-Y H:i:s", strtotime($dateTime));
+      $formattedDate = date("d-m-Y", strtotime($dateTime));
     }
     return $formattedDate;
   }

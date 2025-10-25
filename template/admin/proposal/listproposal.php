@@ -188,11 +188,17 @@ use core\View as View;
                     unset($_SESSION['proposal']['flash']);
                   } ?>
                 </div>
-
-                <a href="<?php echo BASE_URL; ?>optin"><button class="btn btn-primary add-user-btn">
-                    <i class="fas fa-user-plus mr-2"></i> New Application
-                  </button>
-                </a>
+                
+                <?php
+                if(!empty($_SESSION['auth']['user_department']) && $_SESSION['auth']['user_department'] == "Client"){
+                ?>
+                  <a href="<?php echo BASE_URL; ?>optin"><button class="btn btn-primary add-user-btn">
+                      <i class="fas fa-user-plus mr-2"></i> New Application
+                    </button>
+                  </a>
+                <?
+                }
+                ?>
 
               </div>
 
@@ -518,6 +524,82 @@ document.getElementById("closePdfViewer").addEventListener("click", function() {
   document.getElementById("pdfViewer").innerHTML = ""; // clear canvases
 });
 </script>
+
+<script>
+function downloadZip(recordId) {
+
+  fetch(`/downloaddocuments/${recordId}`)
+    .then(response => {
+
+      console.log(response);
+
+      if (!response.ok) {
+        throw new Error("Download failed");
+      }
+
+      // Optional: extract filename from Content-Disposition header
+      const header = response.headers.get('Content-Disposition');
+      let filename = 'documents.zip';
+      if (header && header.includes('filename=')) {
+        filename = header.split('filename=')[1].replace(/['"]/g, '');
+      }
+
+      return response.blob().then(blob => ({ blob, filename }));
+    })
+    .then(({ blob, filename }) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      // ✅ Success swal
+      swal({
+        icon: "success",
+        title: "Download Started",
+        content: {
+          element: "span",
+          attributes: {
+            innerHTML: `The ZIP file <b>${filename}</b> has started downloading.<br>Redirecting...`,
+            style: "color: #198754; font-weight: normal; font-size:16px;"
+          }
+        },
+        buttons: false,
+        timer: 2000 // ⏳ 2.5 seconds delay
+      });
+
+      // ⏳ Redirect after delay
+      setTimeout(() => {
+        window.location.href = '/proposals';
+      }, 2500);
+    })
+    .catch(() => {
+      swal({
+        icon: "error", // #DC3545FF cross icon
+        title: "Download Failed",
+        content: {
+          element: "span",
+          attributes: {
+            innerHTML: "Failed to download the ZIP file. Please try again.",
+            style: "color: #DC3545FF; font-weight: normal;font-size:14px;"
+          }
+        },
+        buttons: {
+          confirm: {
+            text: "OK",
+            value: true,
+            visible: true,
+            className: "btn btn-primary"
+          }
+        }
+      });      
+    });
+}
+</script>
+
 
 
 </body>

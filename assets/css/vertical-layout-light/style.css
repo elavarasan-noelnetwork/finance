@@ -21412,7 +21412,7 @@ code {
 
 /* Utilities */
 .grid-margin {
-  margin-bottom: 1.375rem;
+  margin-bottom: 0rem;
 }
 
 @media (min-width: 576px) {

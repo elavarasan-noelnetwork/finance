@@ -1,22 +1,22 @@
 <?php return array(
     'root' => array(
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => null,
-        'name' => 'noel/engineering',
+        'reference' => 'b78fae6e06908f9684e76f4dd9bc1208255095be',
+        'name' => 'noel/finance',
         'dev' => true,
     ),
     'versions' => array(
-        'noel/engineering' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
+        'noel/finance' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => null,
+            'reference' => 'b78fae6e06908f9684e76f4dd9bc1208255095be',
             'dev_requirement' => false,
         ),
         'phpoption/phpoption' => array(
@@ -26,6 +26,15 @@
             'install_path' => __DIR__ . '/../phpoption/phpoption',
             'aliases' => array(),
             'reference' => 'eab7a0df01fe2344d172bff4cd6dbd3f8b84ad15',
+            'dev_requirement' => false,
+        ),
+        'setasign/fpdi' => array(
+            'pretty_version' => 'v2.6.4',
+            'version' => '2.6.4.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../setasign/fpdi',
+            'aliases' => array(),
+            'reference' => '4b53852fde2734ec6a07e458a085db627c60eada',
             'dev_requirement' => false,
         ),
         'symfony/polyfill-ctype' => array(

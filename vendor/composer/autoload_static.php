@@ -11,6 +11,10 @@ class ComposerStaticInit445548f52865c10257bde95b6cc32e29
     );
 
     public static $prefixLengthsPsr4 = array (
+        's' => 
+        array (
+            'setasign\\Fpdi\\' => 14,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Ctype\\' => 23,
@@ -21,7 +25,7 @@ class ComposerStaticInit445548f52865c10257bde95b6cc32e29
         ),
         'N' => 
         array (
-            'Noel\\Engineering\\' => 17,
+            'Noel\\finance\\' => 13,
         ),
         'D' => 
         array (
@@ -30,6 +34,10 @@ class ComposerStaticInit445548f52865c10257bde95b6cc32e29
     );
 
     public static $prefixDirsPsr4 = array (
+        'setasign\\Fpdi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/setasign/fpdi/src',
+        ),
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
@@ -38,7 +46,7 @@ class ComposerStaticInit445548f52865c10257bde95b6cc32e29
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
         ),
-        'Noel\\Engineering\\' => 
+        'Noel\\finance\\' => 
         array (
             0 => __DIR__ . '/../..' . '/lib',
         ),

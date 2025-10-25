@@ -17,41 +17,9 @@ $currentPage=$_OcommonCtrl->getCurrentPageName();
 
 if (!empty($currentPage)) {
   $routeAliases = [
-    
-    'admin' => 'dashboard',
+   
+    'viewproposal' => 'proposals',  
 
-    'adduser' => 'users',
-    'viewuser' => 'users',
-    'edituser' => 'users',
-    'storeuser' => 'users',
-
-    'adddepartment' => 'departments',
-    'editdepartment' => 'departments',
-    'viewdepartment' => 'departments',
-    'storedepartment' => 'departments',
-
-    'addrole' => 'roles',
-    'editrole' => 'roles',
-    'viewrole' => 'roles',  
-    'storerole' => 'roles',   
-    'viewrolemenu' => 'roles',   
-    'storerolemenu' => 'roles',   
-    'viewpageacess' => 'roles',
-
-    'addmenu' => 'menus',
-    'editmenu' => 'menus',
-    'viewmenu' => 'menus',  
-    'storemenu' => 'menus',
-
-    'addpage' => 'pages',
-    'editpage' => 'pages',
-    'viewpage' => 'pages',  
-    'storepage' => 'pages',   
-    
-
-    'editcompany' => 'companies',
-    'viewcompany' => 'companies',  
-    'storecompany' => 'companies',    
 
   ];
   $resolvedPage = $routeAliases[$currentPage] ?? $currentPage;
