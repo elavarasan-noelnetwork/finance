@@ -14,6 +14,8 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 //use your own models 
 use app\models\Model;
 use app\models\LoanModel;
+use app\models\TrustModel;
+use app\models\SmsfModel;
 use core\View as View;
 use app\controllers\CommonController;
 use Exception;
@@ -133,6 +135,20 @@ class ProposalController extends Controller
           Model::$db->where('p.zl_cash_investment', 1);
       }
 
+      //department based lists
+      if(!empty($_SESSION['auth']['user_department']) && $_SESSION['auth']['user_department'] == "Client"){      
+        Model::$db->where('p.zl_user_id', $_SESSION['auth']['user_id']);
+      }
+      elseif(!empty($_SESSION['auth']['user_department']) && $_SESSION['auth']['user_department'] == "Accounts"){      
+        Model::$db->where('p.zl_status', [20, 30], 'IN');
+      }
+      elseif(!empty($_SESSION['auth']['user_department']) && $_SESSION['auth']['user_department'] == "Finance"){      
+        Model::$db->where('p.zl_status', 40);
+      }
+      elseif(!empty($_SESSION['auth']['user_department']) && $_SESSION['auth']['user_department'] == "Legal"){      
+        Model::$db->where('p.zl_status', 60);
+      }      
+
       $filteredDb = Model::$db->copy();
       $totalFiltered = $filteredDb->getValue("zeon_loan p", "count(*)");
 
@@ -199,49 +215,58 @@ class ProposalController extends Controller
             }    
             elseif ($row['zl_loan_required'] == 1) {
               $sourceRedirectValue = 'application';
-            }                              
+            }    
+            
 
-$continueLink = '                          
-<div class="d-flex gap-2">
-  <a href="'.$sourceRedirectValue.'" title="Continue Progress" style="text-decoration: none;">
-    <button type="button" class="btn btn-outline-danger blink-icon rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 36px; height: 36px;">
-      <i class="typcn typcn-arrow-right-thick" style="font-size: 18px; color: red;"></i>
-    </button>                      
-  </a>
-</div>
+            if(!empty($_SESSION['auth']['user_department']) && $_SESSION['auth']['user_department'] == "Client"){
+              $continueLink = '                          
+              <div class="d-flex gap-2">
+                <a href="'.$sourceRedirectValue.'" title="Continue Progress" style="text-decoration: none;">
+                  <button type="button" class="btn btn-outline-danger blink-icon rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 36px; height: 36px;">
+                    <i class="typcn typcn-arrow-right-thick" style="font-size: 18px; color: red;"></i>
+                  </button>                      
+                </a>
+              </div>
 
-<style>
-@keyframes blink {
-  0%, 50%, 100% {
-    opacity: 1;
-  }
-  25%, 75% {
-    opacity: 0;
-  }
-}
+              <style>
+              @keyframes blink {
+                0%, 50%, 100% {
+                  opacity: 1;
+                }
+                25%, 75% {
+                  opacity: 0;
+                }
+              }
 
-/* Makes the entire button (circle + icon) blink */
-.blink-icon {
-  animation: blink 1.5s infinite;
-}
+              /* Makes the entire button (circle + icon) blink */
+              .blink-icon {
+                animation: blink 1.5s infinite;
+              }
 
-/* Ensures the border is red */
-.btn-outline-danger {
-  border-color: red;
-  color: red;
-}
-</style>
-';
+              /* Ensures the border is red */
+              .btn-outline-danger {
+                border-color: red;
+                color: red;
+              }
+              </style>
+              ';
+            }
           }
+
         }
 
-
-        $downloadLink = '
-                      <a href="#" title="Dowload Document" style="text-decoration: none;">
-                        <button type="button" class="btn btn-outline-info rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 36px; height: 36px;">
-                          <i class="typcn typcn-download" style="font-size: 18px;"></i>
-                        </button>                      
-                      </a>';
+        if(!empty($_SESSION['auth']['user_department']) && $_SESSION['auth']['user_department'] == "Admin"
+        || $_SESSION['auth']['user_department'] == "Legal"
+        ){
+          if ($row['zl_final_doc_generated'] == 1) {
+            $downloadLink = '
+                          <a href="#" onclick="downloadZip('.$row['zl_id'].')" title="Dowload Document" style="text-decoration: none;">
+                            <button type="button" class="btn btn-outline-info rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 36px; height: 36px;">
+                              <i class="typcn typcn-download" style="font-size: 18px;"></i>
+                            </button>                      
+                          </a>';
+            }
+        }
 
         $deleteLink = '
                           <a href="#" title="Dowload Document" style="text-decoration: none;">
@@ -254,7 +279,7 @@ $continueLink = '
 
         $viewLink = '                          
                         <div class="d-flex gap-2">
-                          <a href="#" title="view Application" style="text-decoration: none;" >
+                          <a href="/viewproposal/'.$row['zl_id'].'" title="view Application" style="text-decoration: none;" >
                             <button type="button" class="btn btn-outline-info rounded-circle d-flex align-items-center justify-content-center p-0" style="width: 36px; height: 36px;">
                               <i class="typcn typcn-zoom" style="font-size: 18px;"></i>
                             </button>                      
@@ -348,7 +373,7 @@ $continueLink = '
 
         $data[] = [
           'code' => $row['zl_code'] ? '<b>' . $row['zl_code'] . '</b>' : 'NA',
-          'created_on' => date('d-m-Y H:i', strtotime($row['zlu_created_on'])),
+          'created_on' => date('d-m-Y H:i', strtotime($row['zl_created_on'])),
           'property' => PROPERTY_NAME_ARRAY[$row['zl_property_id']] ? PROPERTY_NAME_ARRAY[$row['zl_property_id']] : 'NA',
           'Type' => BUYING_TYPE_NAME_ARRAY[$row['zl_buying_as_id']] ? BUYING_TYPE_NAME_ARRAY[$row['zl_buying_as_id']] : 'NA',
           'Details' => $details,
@@ -357,8 +382,9 @@ $continueLink = '
           'Progress' => $progressBar,
           'actions' => '
                         <div class="d-flex gap-2">
-                        ' . $continueLink . '
-                        ' . $viewLink . '
+                        ' . $viewLink . '   
+                        ' . $continueLink . '                        
+                        ' . $downloadLink . '                                             
                         </div>'
         ];
       }
@@ -372,6 +398,89 @@ $continueLink = '
       ]);
       exit;
     }
+  }
+
+
+  public function viewproposal($route)
+  {    
+    //initialize variables
+    $errorArray = [];
+    $loanArray =  [];
+    $trustArray = [];
+    $smsfArray = [];
+
+    //validate user id
+    $applicationId = $route['uri'][1];
+    if (empty($applicationId) || !is_numeric($applicationId)) {
+      $errorArray[] = "Invalid application ID provided.";
+    } else {
+      //retrieve loan
+      $loanObject = new LoanModel();
+      $loanArray = $loanObject->getOne("zl_id = '{$applicationId}'");          
+      if (empty($loanArray)) {
+        $errorArray[] = "Apllication not found.";
+      }
+
+      //retrieve trust details
+      $trustObject = new TrustModel();
+      $trustArray = $trustObject->getOne("zlt_id_loan_id = '{$applicationId}'");  
+      
+      //retrieve smsf details      
+      $smsfObject = new SmsfModel();
+      $smsfArray = $smsfObject->getOne("zls_id_loan_id = '{$applicationId}'");        
+
+    }
+
+    //redirect view application page 
+    $page_data = ["app_name" => APP_NAME, "route" => $route];
+    View::render(
+      "admin/proposal/viewproposal",
+      [
+        "page_data" => $page_data,
+        "errorArray" => $errorArray,
+        "loan_array" => $loanArray,
+        "trust_array" => $trustArray,
+        "smsf_array" => $smsfArray,
+      ]
+    );
+    exit;
+  }  
+
+  
+
+  public function updateSetupComplete($route){
+
+    $errorArray = array();
+    $message = '';
+
+
+    if (isset($_POST['loan_id']) && $_POST['loan_id'] != '' && is_numeric($_POST['loan_id']) && $_POST['loan_id'] > 0) {
+      $loan_id = $_POST['loan_id'];
+
+      //update process
+      $whereUpdate["zl_id"] = $loan_id;
+      $loanStatus=60;
+      $ipData['zl_status'] = $loanStatus;
+      $ipData['zl_loan_progress_percentage'] = LOAN_PROGRESS_PERCNTAGE_ARRAY[$loanStatus];  
+
+      $loanModelObj = new LoanModel();
+      $updateResult =  $loanModelObj->update($ipData, $whereUpdate); 
+      if ($updateResult) {
+        $message = "Status updated successfully.";
+      } else {
+        $message = 'Error while updating. Please try again later.';
+      }      
+    }
+    else{
+      $message = 'Error while updating. Please try again later.';
+    }    
+
+    $_Aresponse = array();
+    $_Aresponse['status'] = true;
+    $_Aresponse['message'] =  $message;
+
+    $_AjsonResponse = json_encode($_Aresponse);
+    echo $_AjsonResponse;
   }
 
   /*
@@ -739,4 +848,7 @@ $continueLink = '
     return false;
   }
   */
+
+
+  
 }

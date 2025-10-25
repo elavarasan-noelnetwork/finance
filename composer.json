@@ -3,7 +3,8 @@
   "type": "project",
   "require": {
     "vlucas/phpdotenv": "^3.6",
-    "tecnickcom/tcpdf": "^6.10"
+    "tecnickcom/tcpdf": "^6.10",
+    "setasign/fpdi": "^2.6"
   },
   "autoload": {
     "psr-4": {

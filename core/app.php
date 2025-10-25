@@ -10,6 +10,7 @@ use app\controllers\admin\ProposalController;
 use app\controllers\LoanProgressController;
 use app\controllers\TrustController;
 use app\controllers\SmsfController;
+use app\controllers\PdfController;
 
 //print_r(UserController::class);die;
 
@@ -45,6 +46,18 @@ CommonController::authRoute("post", "/updatepassword", [UserController::class, "
 
 CommonController::authRoute("get", "/proposals", [ProposalController::class, "home"]);
 CommonController::authRoute("post", "/ajaxproposals", [ProposalController::class, "ajaxproposals"]);
+CommonController::authRoute("get", "/viewproposal/{*}", [ProposalController::class, "viewproposal"]);
+CommonController::authRoute("post", "/setup", [ProposalController::class, "updateSetupComplete"]);
+
+
+CommonController::authRoute("get", "/trust/{*}", [TrustController::class, "home"]);
+
+CommonController::authRoute("get", "/downloaddocuments/{*}", [PdfController::class, "downloadFinalDocuments"]);
+
+
+
+//test
+//CommonController::authRoute("get", "/testpdf", [LoanApplicationController::class, "home"]);
 
 
 /* 404 Page - Not found route */

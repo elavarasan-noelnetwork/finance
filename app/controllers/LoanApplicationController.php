@@ -13,10 +13,16 @@ use core\View as View;
 use app\models\LoanModel;
 use app\models\Model;
 use app\models\UserModel;
+use app\controllers\PdfController;
 
 class LoanApplicationController extends Controller
 {
 
+  public function home($route)
+  {
+    echo "hai";    
+    exit;
+  }
 
   public function optin($route)
   {
@@ -154,7 +160,7 @@ class LoanApplicationController extends Controller
             $whereUserUpdate["zlu_id"] = $_SESSION['auth']['user_id'];
             $upd_user_ip_data['zlu_application_completed'] = 1;
             $updateUserResult =  $this->UserModel->update($upd_user_ip_data, $whereUserUpdate);
-            if ($updateUserResult) {   
+            if ($updateUserResult) {               
               $successFlag = true;
             }         
           }
@@ -170,6 +176,11 @@ class LoanApplicationController extends Controller
         $_SESSION['auth']['user_redirect']='proposals';
         $_SESSION['auth']['user_application'] = 1;
         Model::$db->commit();
+
+        //generate final documents
+        if(!empty($loanResult) && !empty($loanStatus) && $loanStatus == 60){ //legal review
+          PdfController::generateFinalDocuments($loanResult);
+        }
 
         $redirectPageWithId = $redirectPage;
         if($redirectPage == "trust" || $redirectPage == "smsf"){

@@ -20,6 +20,10 @@ $nonAuthorizPagesArray=[
 'storetrust',
 'smsf',
 'storesmsf',
+'testpdf',
+'downloaddocuments',
+'viewproposal',
+'setup',
 ];
 
 $pageSpecificAuthorization=[
@@ -35,10 +39,15 @@ $departmentArray[5] = 'Finance';
 $optinYesNoArray['Yes'] = 1;
 $optinYesNoArray['No'] = 2;
 
-$propertyNameArray[1]= "33 Carl Street";
+$propertyNameArray[1]= "33 Carl";
 $propertyNameArray[2]= "39 Raffles";
 $propertyNameArray[3]= "61 Regent";
 $propertyNameArray[4]= "55 Regent";
+
+$propertyNamePrefixArray[1]= "Carl";
+$propertyNamePrefixArray[2]= "Raffles";
+$propertyNamePrefixArray[3]= "Regent";
+$propertyNamePrefixArray[4]= "Regent";
 
 $buyingTypeArray['Individual'] = 1;
 $buyingTypeArray['Trust'] = 2;
@@ -57,12 +66,16 @@ $loanStatusArray[60] = "Legal Review";
 $loanStatusArray[70] = "Closed";
 
 $loanProgressPercentageArray[10] = 10;
-$loanProgressPercentageArray[20] = 20;  
-$loanProgressPercentageArray[30] = 20;  
-$loanProgressPercentageArray[40] = 40;  
-$loanProgressPercentageArray[50] = 60;  
+$loanProgressPercentageArray[40] = 30;  
+$loanProgressPercentageArray[50] = 100;  
+$loanProgressPercentageArray[30] = 70;  
+$loanProgressPercentageArray[20] = 70;  
 $loanProgressPercentageArray[60] = 80;  
 $loanProgressPercentageArray[70] = 100; 
+
+$pdfFileTyep[1]="application_of_units";
+$pdfFileTyep[2]="trust_account_authority";
+$pdfFileTyep[3]="final_investment_deed";
 
 define('NON_AUTH_PAGES_ARRAY', $nonAuthorizPagesArray);
 define('PAGE_SPECIFIC_AUTH_PAGES_ARRAY', $pageSpecificAuthorization);
@@ -70,9 +83,11 @@ define('PAGE_SPECIFIC_AUTH_PAGES_ARRAY', $pageSpecificAuthorization);
 
 define('OPTION_YES_NO_ARRAY', $optinYesNoArray);
 define('PROPERTY_NAME_ARRAY', $propertyNameArray);
+define('PROPERTY_NAME_PREFIX_ARRAY', $propertyNamePrefixArray);
 define('BUYING_TYPE_ARRAY', $buyingTypeArray);
 define('BUYING_TYPE_NAME_ARRAY', $buyingTypeNameArray);
 define('LOAN_STATUS_ARRAY', $loanStatusArray);
 define('DEPARTMENT_ARRAY', $departmentArray);
 define('LOAN_PROGRESS_PERCNTAGE_ARRAY', $loanProgressPercentageArray);
+define('PDF_FILE_TYPE_ARRAY', $pdfFileTyep);
 ?>

@@ -39,18 +39,8 @@ define('APP_NAME', env('APP_NAME'));
 define('BASE_URL', "$currentUrl".'/' );
 define('ASSETS_DIR', $currentUrl."/assets" );
 
-define('PDF_IMG_URL', $currentUrl."/pdf_images/" );
-define('PDF_IMG_PATH', dirname(__DIR__) . "/pdf_images/" );
-
-define('PDF_UPLOAD_PATH', dirname(__DIR__) . '/proposal_pdfs/');
-define('PDF_UPLOAD_URL', BASE_URL . "proposal_pdfs/");
-
-define('COM_LOGO_PATH', dirname(__DIR__) . '/company_logos/');
-define('COM_LOGO_URL', BASE_URL . "company_logos/");
-
-
-define('COM_LOGO_TEMP_PATH', dirname(__DIR__) . '/company_logos/tmp/');
-define('COM_LOGO_TEMP_URL', BASE_URL . "company_logos/tmp/");
+define('PDF_UPLOAD_PATH', dirname(__DIR__) . '/pdf_documents/');
+define('PDF_UPLOAD_URL', BASE_URL . "pdf_documents/");
 
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);

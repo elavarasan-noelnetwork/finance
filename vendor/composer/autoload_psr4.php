@@ -6,8 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'PhpOption\\' => array($vendorDir . '/phpoption/phpoption/src/PhpOption'),
-    'Noel\\Engineering\\' => array($baseDir . '/lib'),
+    'Noel\\finance\\' => array($baseDir . '/lib'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
 );
