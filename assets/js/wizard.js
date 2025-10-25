@@ -17,6 +17,13 @@
     return this.optional(element) || (/^\d{9}$/).test(cleaned);
   }, "Please enter exactly 9 digits.");
 
+  $.validator.addMethod("greaterThanZero",function (value, element) {
+    // Check if numeric and > 0
+    return this.optional(element) || parseFloat(value) > 0;
+    },
+    "Value must be greater than 0"
+  );
+
   form.validate({
     errorPlacement: function errorPlacement(error, element) {
       element.after(error);
@@ -66,7 +73,11 @@
       },
       date_of_birth: {
         required: true,
-      }
+      },
+      home_contents_value: {
+        required: true,
+        greaterThanZero: true,
+      },
 
 
     },
@@ -114,7 +125,12 @@
       },
       date_of_birth: {
         required: "Date of birth is required"
+      },
+      home_contents_value: {
+        required: "Home contents is required",
+        greaterThanZero: "Value must be greater than 0",
       }
+
     }
 
   });
